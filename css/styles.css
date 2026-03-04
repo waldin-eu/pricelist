@@ -307,10 +307,31 @@ body.category-page {
 
 .category-bar {
   margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .category-bar input {
   max-width: 360px;
+  flex: 1 1 320px;
+}
+
+.category-bar select {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 10px;
+  font-size: 14px;
+  background: #fff;
+  color: var(--text);
+  outline: none;
+  min-width: 130px;
+}
+
+.category-bar select:focus {
+  border-color: var(--border);
+  box-shadow: 0 0 0 4px rgba(237,230,224,.55);
 }
 
 .category-out {
@@ -415,6 +436,10 @@ body.category-page {
 
   .category-bar input {
     max-width: 100%;
+  }
+
+  .category-bar select {
+    min-width: 110px;
   }
 }
 

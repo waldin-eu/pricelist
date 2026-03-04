@@ -1,4 +1,4 @@
-ARTICLE NUMBER (SKU),EAN,PRODUCT NAME,PRODUCT PHOTO,DESCRIPTION,BRUTTO PRICE,DROPSHIPPING DISCOUNT,WHOLESALE DISCOUNT,COLOR,MATERIAL,PRODUCT DIMENSIONS AND WEIGHT,,DIMENSIONS AND WEIGHT OF THE SHIPMENT,,PHOTOS
+ARTICLE NUMBER (SKU),EAN,PRODUCT NAME,PRODUCT PHOTO,DESCRIPTION,BRUTTO PRICE,DROPSHIPPING DISCOUNT,WHOLESALE DISCOUNT,COLOR,MATERIAL,PRODUCT DIMENSIONS AND WEIGHT,,DIMENSIONS AND WEIGHT OF THE SHIPMENT
 DRESSER-NATURAL,5904844917249,Dresser,,"A dresser with
 a height-adjustable changing table
 Fronts and legs made of solid beech wood.
@@ -14,7 +14,7 @@ Stable arched legs – harmoniously matching our cribs.",599,,,NATURAL ,BEECH WO
 107 cm/ 55 cm/ 82 cm
 
 with changing table
-107 cm/ 77 cm/ 82 cm",,,,
+107 cm/ 77 cm/ 82 cm",,
 DRESSER-WHITE,5904844917232,Dresser,,"A dresser with
 a height-adjustable changing table
 Fronts and legs made of solid beech wood.
@@ -30,7 +30,7 @@ Stable arched legs – harmoniously matching our cribs.",599,,,WHITE,BEECH WOOD,
 107 cm/ 55 cm/ 82 cm
 
 with changing table
-107 cm/ 77 cm/ 82 cm",,,,
+107 cm/ 77 cm/ 82 cm",,
 DRESSER-GRAY,5904844917225,Dresser,,"A dresser with
 a height-adjustable changing table
 Fronts and legs made of solid beech wood.
@@ -46,7 +46,7 @@ Stable arched legs – harmoniously matching our cribs.",599,,,GRAY,BEECH WOOD,"
 107 cm/ 55 cm/ 82 cm
 
 with changing table
-107 cm/ 77 cm/ 82 cm",,,,
+107 cm/ 77 cm/ 82 cm",,
 DRESSER-GRAPHITE,5904844917218,Dresser,,"A dresser with
 a height-adjustable changing table
 Fronts and legs made of solid beech wood.
@@ -62,7 +62,7 @@ Stable arched legs – harmoniously matching our cribs.",599,,,GRAPHITE,BEECH WO
 107 cm/ 55 cm/ 82 cm
 
 with changing table
-107 cm/ 77 cm/ 82 cm",,,,
+107 cm/ 77 cm/ 82 cm",,
 DRESSER-OLIVE,5904844917201,Dresser,,"A dresser with
 a height-adjustable changing table
 Fronts and legs made of solid beech wood.
@@ -78,5 +78,5 @@ Stable arched legs – harmoniously matching our cribs.",599,,,OLIVE,BEECH WOOD,
 107 cm/ 55 cm/ 82 cm
 
 with changing table
-107 cm/ 77 cm/ 82 cm",,,,
-CHANGING-TABLE-NATURAL,5904844917256,Changing table,,Changing table made of solid beech wood,159,,,NATURAL ,BEECH WOOD,77 cm / 56 cm / 10 cm,,,,
+107 cm/ 77 cm/ 82 cm",,
+CHANGING-TABLE-NATURAL,5904844917256,Changing table,,Changing table made of solid beech wood,159,,,NATURAL ,BEECH WOOD,77 cm / 56 cm / 10 cm,,

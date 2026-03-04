@@ -2,6 +2,16 @@ function getParam(name) {
   return new URLSearchParams(location.search).get(name);
 }
 
+function setParam(name, value) {
+  const url = new URL(window.location.href);
+  if (!value) {
+    url.searchParams.delete(name);
+  } else {
+    url.searchParams.set(name, value);
+  }
+  window.history.replaceState({}, "", url.toString());
+}
+
 function titleFromFilename(name) {
   let t = name.replace(/^PriceList_\d{4}_/i, "").replace(/\.csv$/i, "");
   t = t.replace(/_/g, " ").trim();
@@ -163,6 +173,14 @@ function collectKeys(rows) {
   return keys;
 }
 
+function findProductNameKey(keys) {
+  return keys.find((k) => normalizeHeaderName(k).replace(/\s+/g, " ").includes("product name"));
+}
+
+function findDescriptionKey(keys) {
+  return keys.find((k) => normalizeHeaderName(k).replace(/\s+/g, " ").includes("description"));
+}
+
 function combineWithComma(left, right) {
   const a = (left ?? "").toString().trim();
   const b = (right ?? "").toString().trim();
@@ -172,31 +190,23 @@ function combineWithComma(left, right) {
 
 function transformColumns(rows, keys) {
   const nextKeys = [...keys];
-  const key12 = nextKeys[11];
-  const key13 = nextKeys[12];
-  const key14 = nextKeys[13];
-  const key15 = nextKeys[14];
+  const isGeneratedBlank = (k) => /^Column \d+$/i.test(String(k || "").trim());
+  const combineNextBlankInto = (targetMatcher) => {
+    const targetIdx = nextKeys.findIndex((k) => targetMatcher(normalizeHeaderName(k)));
+    if (targetIdx === -1 || targetIdx + 1 >= nextKeys.length) return;
+    const targetKey = nextKeys[targetIdx];
+    const nextKey = nextKeys[targetIdx + 1];
+    if (!isGeneratedBlank(nextKey)) return;
 
-  if (key12 && key13) {
     rows.forEach((row) => {
-      row[key12] = combineWithComma(row[key12], row[key13]);
+      row[targetKey] = combineWithComma(row[targetKey], row[nextKey]);
+      delete row[nextKey];
     });
-    nextKeys.splice(12, 1);
-    rows.forEach((row) => {
-      delete row[key13];
-    });
-  }
+    nextKeys.splice(targetIdx + 1, 1);
+  };
 
-  if (key14 && key15) {
-    rows.forEach((row) => {
-      row[key14] = combineWithComma(row[key14], row[key15]);
-    });
-    const idx15 = nextKeys.indexOf(key15);
-    if (idx15 !== -1) nextKeys.splice(idx15, 1);
-    rows.forEach((row) => {
-      delete row[key15];
-    });
-  }
+  combineNextBlankInto((name) => name.includes("product dimensions and weight"));
+  combineNextBlankInto((name) => name.includes("dimensions and weight of the shipment"));
 
   const photosKey = nextKeys.find((k) => normalizeHeaderName(k) === "photos");
   if (photosKey) {
@@ -208,6 +218,48 @@ function transformColumns(rows, keys) {
   }
 
   return { rows, keys: nextKeys };
+}
+
+async function loadTranslations(lang) {
+  try {
+    const res = await fetch(`i18n/${lang}.json`, { cache: "no-store" });
+    if (!res.ok) return new Map();
+    const data = await res.json();
+    const products = data && typeof data.products === "object" ? data.products : {};
+    const index = new Map();
+    Object.entries(products).forEach(([sku, entry]) => {
+      const key = normalizeToken(sku);
+      if (!key) return;
+      index.set(key, entry || {});
+    });
+    return index;
+  } catch (_) {
+    return new Map();
+  }
+}
+
+function applyTranslations(rows, keys, translationIndex) {
+  if (!translationIndex || !translationIndex.size) return rows;
+
+  const skuKey = findSkuKey(keys) || findSkuKey(collectKeys(rows));
+  const nameKey = findProductNameKey(keys);
+  const descriptionKey = findDescriptionKey(keys);
+  if (!skuKey || (!nameKey && !descriptionKey)) return rows;
+
+  return rows.map((row) => {
+    const sku = normalizeToken(row?.[skuKey]);
+    const translated = sku ? translationIndex.get(sku) : null;
+    if (!translated) return row;
+
+    const next = { ...row };
+    if (nameKey && translated.name && String(translated.name).trim()) {
+      next[nameKey] = String(translated.name).trim();
+    }
+    if (descriptionKey && translated.description && String(translated.description).trim()) {
+      next[descriptionKey] = String(translated.description).trim();
+    }
+    return next;
+  });
 }
 
 async function loadCsv(file) {
@@ -342,8 +394,10 @@ function renderTable(data, query, photoIndex) {
 
 async function main() {
   const file = getParam("file");
+  const lang = getParam("lang") || "en";
   const titleEl = document.getElementById("title");
   const outEl = document.getElementById("out");
+  const langEl = document.getElementById("lang");
 
   if (!file) {
     titleEl.textContent = "Missing file parameter";
@@ -352,12 +406,18 @@ async function main() {
   }
 
   titleEl.textContent = titleFromFilename(file);
+  langEl.value = lang;
 
   let rows = [];
   let keys = [];
   let photoIndex = new Map();
+  let translationIndex = new Map();
   try {
-    [{ rows, keys }, photoIndex] = await Promise.all([loadCsv(file), loadPhotoIndex()]);
+    [{ rows, keys }, photoIndex, translationIndex] = await Promise.all([
+      loadCsv(file),
+      loadPhotoIndex(),
+      loadTranslations(lang)
+    ]);
   } catch (e) {
     outEl.innerHTML = `<p>${escapeHtml(e.message)}</p>`;
     return;
@@ -374,9 +434,20 @@ async function main() {
   });
 
   const input = document.getElementById("q");
-  renderTable({ rows, keys }, "", photoIndex);
+  const render = () => {
+    const translatedRows = applyTranslations(rows, keys, translationIndex);
+    renderTable({ rows: translatedRows, keys }, input.value, photoIndex);
+  };
 
-  input.addEventListener("input", () => renderTable({ rows, keys }, input.value, photoIndex));
+  render();
+
+  input.addEventListener("input", render);
+  langEl.addEventListener("change", async () => {
+    const selected = langEl.value || "en";
+    setParam("lang", selected);
+    translationIndex = await loadTranslations(selected);
+    render();
+  });
 }
 
 main();

@@ -1,0 +1,2482 @@
+{
+  "language": "it",
+  "updated": "2026-03-04",
+  "products": {
+    "W5-N": {
+      "name": "",
+      "description": ""
+    },
+    "W5-W": {
+      "name": "",
+      "description": ""
+    },
+    "W5-G": {
+      "name": "",
+      "description": ""
+    },
+    "W5-O": {
+      "name": "",
+      "description": ""
+    },
+    "W5-V": {
+      "name": "",
+      "description": ""
+    },
+    "BASIC-W5-2w1": {
+      "name": "",
+      "description": ""
+    },
+    "K-W5-N": {
+      "name": "",
+      "description": ""
+    },
+    "K-W5-W": {
+      "name": "",
+      "description": ""
+    },
+    "K-W5-G": {
+      "name": "",
+      "description": ""
+    },
+    "K-W5-O": {
+      "name": "",
+      "description": ""
+    },
+    "K-W5-GH": {
+      "name": "",
+      "description": ""
+    },
+    "K-W5-V": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-WP": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SET-J88": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-WP": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "W5-SH-SIDEBED-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "W2-N": {
+      "name": "",
+      "description": ""
+    },
+    "W2-W": {
+      "name": "",
+      "description": ""
+    },
+    "W2-G": {
+      "name": "",
+      "description": ""
+    },
+    "W2-O": {
+      "name": "",
+      "description": ""
+    },
+    "W2-V": {
+      "name": "",
+      "description": ""
+    },
+    "OWAL-N": {
+      "name": "",
+      "description": ""
+    },
+    "OWAL-W": {
+      "name": "",
+      "description": ""
+    },
+    "OWAL-G": {
+      "name": "",
+      "description": ""
+    },
+    "OWAL-O": {
+      "name": "",
+      "description": ""
+    },
+    "OWAL-V": {
+      "name": "",
+      "description": ""
+    },
+    "BASIC-W2-3w1": {
+      "name": "",
+      "description": ""
+    },
+    "BASIC-OWAL-3w1": {
+      "name": "",
+      "description": ""
+    },
+    "677": {
+      "name": "",
+      "description": ""
+    },
+    "732": {
+      "name": "",
+      "description": ""
+    },
+    "673": {
+      "name": "",
+      "description": ""
+    },
+    "676": {
+      "name": "",
+      "description": ""
+    },
+    "731": {
+      "name": "",
+      "description": ""
+    },
+    "675": {
+      "name": "",
+      "description": ""
+    },
+    "729": {
+      "name": "",
+      "description": ""
+    },
+    "672": {
+      "name": "",
+      "description": ""
+    },
+    "727": {
+      "name": "",
+      "description": ""
+    },
+    "671": {
+      "name": "",
+      "description": ""
+    },
+    "730": {
+      "name": "",
+      "description": ""
+    },
+    "674": {
+      "name": "",
+      "description": ""
+    },
+    "664": {
+      "name": "",
+      "description": ""
+    },
+    "669": {
+      "name": "",
+      "description": ""
+    },
+    "KOKOS-W2-MINI": {
+      "name": "",
+      "description": ""
+    },
+    "KOKOS-W2-MAXI": {
+      "name": "",
+      "description": ""
+    },
+    "KOKOS-OWAL-MINI": {
+      "name": "",
+      "description": ""
+    },
+    "KOKOS-OWAL-MAXI": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-S-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-W2-M-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "W2-S-WP": {
+      "name": "",
+      "description": ""
+    },
+    "W2-M-WP": {
+      "name": "",
+      "description": ""
+    },
+    "W2-SH-SET-J88": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-S-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-OWAL-M-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "OWAL-S-WP": {
+      "name": "",
+      "description": ""
+    },
+    "OWAL-M-WP": {
+      "name": "",
+      "description": ""
+    },
+    "OWAL-SH-SET-J88": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-WP": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "SH-SIDEBED-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-WP": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "SH-TABLE-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "CAN-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "CAN-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "CAN-ECRU": {
+      "name": "",
+      "description": ""
+    },
+    "CAN-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "CAN-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "CAN-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "B-11": {
+      "name": "",
+      "description": ""
+    },
+    "B-SMIX": {
+      "name": "",
+      "description": ""
+    },
+    "B-77": {
+      "name": "",
+      "description": ""
+    },
+    "B-88": {
+      "name": "",
+      "description": ""
+    },
+    "B-P18": {
+      "name": "",
+      "description": ""
+    },
+    "B-PP": {
+      "name": "",
+      "description": ""
+    },
+    "SET-23": {
+      "name": "",
+      "description": ""
+    },
+    "SET-8P": {
+      "name": "",
+      "description": ""
+    },
+    "SET-P18": {
+      "name": "",
+      "description": ""
+    },
+    "SET-38": {
+      "name": "",
+      "description": ""
+    },
+    "SET-S81": {
+      "name": "",
+      "description": ""
+    },
+    "SET-8S1": {
+      "name": "",
+      "description": ""
+    },
+    "SET-L8": {
+      "name": "",
+      "description": ""
+    },
+    "SET-11": {
+      "name": "",
+      "description": ""
+    },
+    "SET-S13": {
+      "name": "",
+      "description": ""
+    },
+    "SET-S17": {
+      "name": "",
+      "description": ""
+    },
+    "SET-SMIX": {
+      "name": "",
+      "description": ""
+    },
+    "SET-8L": {
+      "name": "",
+      "description": ""
+    },
+    "SET-88": {
+      "name": "",
+      "description": ""
+    },
+    "SET-P8": {
+      "name": "",
+      "description": ""
+    },
+    "SET-77": {
+      "name": "",
+      "description": ""
+    },
+    "B-02": {
+      "name": "",
+      "description": ""
+    },
+    "B-05": {
+      "name": "",
+      "description": ""
+    },
+    "B-09": {
+      "name": "",
+      "description": ""
+    },
+    "B-12": {
+      "name": "",
+      "description": ""
+    },
+    "B-W-01": {
+      "name": "",
+      "description": ""
+    },
+    "B-W-02": {
+      "name": "",
+      "description": ""
+    },
+    "B-W-03": {
+      "name": "",
+      "description": ""
+    },
+    "B-W-04": {
+      "name": "",
+      "description": ""
+    },
+    "K-N": {
+      "name": "",
+      "description": ""
+    },
+    "K-W": {
+      "name": "",
+      "description": ""
+    },
+    "K-G": {
+      "name": "",
+      "description": ""
+    },
+    "K-O": {
+      "name": "",
+      "description": ""
+    },
+    "K-V": {
+      "name": "",
+      "description": ""
+    },
+    "DRAWER-N": {
+      "name": "",
+      "description": ""
+    },
+    "DRAWER-W": {
+      "name": "",
+      "description": ""
+    },
+    "DRAWER-G": {
+      "name": "",
+      "description": ""
+    },
+    "DRAWER-O": {
+      "name": "",
+      "description": ""
+    },
+    "DRAWER-GH": {
+      "name": "",
+      "description": ""
+    },
+    "EX-N": {
+      "name": "",
+      "description": ""
+    },
+    "EX-W": {
+      "name": "",
+      "description": ""
+    },
+    "EX-G": {
+      "name": "",
+      "description": ""
+    },
+    "EX-O": {
+      "name": "",
+      "description": ""
+    },
+    "EX-V": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-CREAM-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-DARKBEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-BROWN-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-OLIVE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-POLICE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-POLICE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-CANDYCUTE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-CANDYCUTE-PINK-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-BEARS-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-BEARS-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-CREAM-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-DARKBEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-BROWN-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-WHALE-OLIVE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-POLICE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-POLICE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-CANDYCUTE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-CANDYCUTE-PINK-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-BEARS-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "PILLOW-BEARS-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-WHITE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-CREAM-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BEIGE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBEIGE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BROWN-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBLUE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-OLIVE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-WHITE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-DARKBLUE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-WHITE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-PINK-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-WHITE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-LIGHTBEIGE-XS": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-CREAM-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BROWN-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-OLIVE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-PINK-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-LIGHTBEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-CREAM-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BROWN-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-OLIVE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-PINK-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-LIGHTBEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-WHITE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-CREAM-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BEIGE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBEIGE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BROWN-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBLUE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-OLIVE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-WHITE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-DARKBLUE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-WHITE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-PINK-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-WHITE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-LIGHTBEIGE-L": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-WHITE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-CREAM-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BEIGE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBEIGE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-BROWN-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-DARKBLUE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-WHALE-OLIVE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-WHITE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-POLICE-DARKBLUE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-WHITE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-CANDYCUTE-PINK-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-WHITE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "DUVET-BEARS-LIGHTBEIGE-XL": {
+      "name": "",
+      "description": ""
+    },
+    "BD-L-01": {
+      "name": "",
+      "description": ""
+    },
+    "BD-2W1-01": {
+      "name": "",
+      "description": ""
+    },
+    "BD-L-02": {
+      "name": "",
+      "description": ""
+    },
+    "BD-2W1-02": {
+      "name": "",
+      "description": ""
+    },
+    "BD-L-03": {
+      "name": "",
+      "description": ""
+    },
+    "BD-2W1-03": {
+      "name": "",
+      "description": ""
+    },
+    "BD-L-04": {
+      "name": "",
+      "description": ""
+    },
+    "BD-2W1-04": {
+      "name": "",
+      "description": ""
+    },
+    "BD-L-ECRU": {
+      "name": "",
+      "description": ""
+    },
+    "BD-2W1-ECRU": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XL-01": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XL-02": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XL-03": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XL-04": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XL-ECRU": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XXL-01": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XXL-02": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XXL-03": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XXL-04": {
+      "name": "",
+      "description": ""
+    },
+    "BD-XXL-ECRU": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XL-01": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XL-02": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XL-03": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XL-04": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XL-ECRU": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XXL-01": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XXL-02": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XXL-03": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XXL-04": {
+      "name": "",
+      "description": ""
+    },
+    "BDP-XXL-ECRU": {
+      "name": "",
+      "description": ""
+    },
+    "DRESSER-NATURAL": {
+      "name": "",
+      "description": ""
+    },
+    "DRESSER-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "DRESSER-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "DRESSER-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "DRESSER-OLIVE": {
+      "name": "",
+      "description": ""
+    },
+    "CHANGING-TABLE-NATURAL": {
+      "name": "",
+      "description": ""
+    },
+    "1201-08 N": {
+      "name": "",
+      "description": ""
+    },
+    "1201-08 W": {
+      "name": "",
+      "description": ""
+    },
+    "1201-08-D": {
+      "name": "",
+      "description": ""
+    },
+    "1202-88-N": {
+      "name": "",
+      "description": ""
+    },
+    "1202-88-W": {
+      "name": "",
+      "description": ""
+    },
+    "1202-88-D": {
+      "name": "",
+      "description": ""
+    },
+    "1202-1s1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1202-1s1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1202-1s1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1202-8s1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1202-8s1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1202-8S1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1203-88-N": {
+      "name": "",
+      "description": ""
+    },
+    "1203-88-W": {
+      "name": "",
+      "description": ""
+    },
+    "1203-88-D": {
+      "name": "",
+      "description": ""
+    },
+    "1203-1s1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1203-1s1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1203-1s1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1203-8s1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1203-8s1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1203-8s1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1205-38": {
+      "name": "",
+      "description": ""
+    },
+    "1205-58": {
+      "name": "",
+      "description": ""
+    },
+    "1205-78": {
+      "name": "",
+      "description": ""
+    },
+    "1205-88": {
+      "name": "",
+      "description": ""
+    },
+    "1205-11": {
+      "name": "",
+      "description": ""
+    },
+    "1205-8p18": {
+      "name": "",
+      "description": ""
+    },
+    "1207-08-N": {
+      "name": "",
+      "description": ""
+    },
+    "1207-08-W": {
+      "name": "",
+      "description": ""
+    },
+    "1207-08-D": {
+      "name": "",
+      "description": ""
+    },
+    "1207-1s1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1207-1s1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1207-1s1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1207-8s1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1207-8s1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1207-8s1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1207-8s8-N": {
+      "name": "",
+      "description": ""
+    },
+    "1207-8s8-W": {
+      "name": "",
+      "description": ""
+    },
+    "1207-8s8-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-88-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-88-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-88-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1s1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1s1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1s1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8s1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8s1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-88-G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-88-GH": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1s1-G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1s1-GH": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8s1-G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8s1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1k1 N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1k1 W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1k1-G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1k1 D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8k1-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8k1-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8k1 G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8k1-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8s8-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8s8-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8s8-G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8s8-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1p18-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1p18-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1p18 G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1p18-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1p81-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1p81-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1P81-G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-1p81-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p18-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p18-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p18-G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p18-GR": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p18-D": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p81-N": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p81-W": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p81-G": {
+      "name": "",
+      "description": ""
+    },
+    "1211-8p81-D": {
+      "name": "",
+      "description": ""
+    },
+    "1212-88-N": {
+      "name": "",
+      "description": ""
+    },
+    "1212-88-W": {
+      "name": "",
+      "description": ""
+    },
+    "1212-88-G": {
+      "name": "",
+      "description": ""
+    },
+    "1212-88-D": {
+      "name": "",
+      "description": ""
+    },
+    "1212-1p18-N": {
+      "name": "",
+      "description": ""
+    },
+    "1212-1p18-W": {
+      "name": "",
+      "description": ""
+    },
+    "1212-1p18-G": {
+      "name": "",
+      "description": ""
+    },
+    "1212-1p18-D": {
+      "name": "",
+      "description": ""
+    },
+    "1212-8p18-N": {
+      "name": "",
+      "description": ""
+    },
+    "1212-8p18-W": {
+      "name": "",
+      "description": ""
+    },
+    "1212-8p18-G": {
+      "name": "",
+      "description": ""
+    },
+    "1212-8p18-D": {
+      "name": "",
+      "description": ""
+    },
+    "1212-8p81-N": {
+      "name": "",
+      "description": ""
+    },
+    "1212-8p81-W": {
+      "name": "",
+      "description": ""
+    },
+    "1212-8p81-G": {
+      "name": "",
+      "description": ""
+    },
+    "1212-8p81-D": {
+      "name": "",
+      "description": ""
+    },
+    "WW-M": {
+      "name": "",
+      "description": ""
+    },
+    "3100-00-N": {
+      "name": "",
+      "description": ""
+    },
+    "3100-00-W": {
+      "name": "",
+      "description": ""
+    },
+    "3100-00-G": {
+      "name": "",
+      "description": ""
+    },
+    "3100-00-GH": {
+      "name": "",
+      "description": ""
+    },
+    "PP-P18": {
+      "name": "",
+      "description": ""
+    },
+    "3006-N": {
+      "name": "",
+      "description": ""
+    },
+    "3006-W": {
+      "name": "",
+      "description": ""
+    },
+    "3006-G": {
+      "name": "",
+      "description": ""
+    },
+    "3006-GH": {
+      "name": "",
+      "description": ""
+    },
+    "2001-01-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-88-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SMIX-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-8S1-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-38-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-77-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S17-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-P18-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-P81-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S13-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S81-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SX18-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SX81-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-P8-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-L8-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SMIX-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-8S1-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-38-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-77-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-88-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S17-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-P18-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S13-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S81-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SX18-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SX81-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-P8-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-L8-N": {
+      "name": "",
+      "description": ""
+    },
+    "2001-01-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-88-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SMIX-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-8S1-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-38-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-77-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S17-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-P18-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-P81-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S13-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S81-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SX18-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SX81-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-P8-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-L8-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SMIX-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-8S1-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-38-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-77-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-88-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S17-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-P18-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S13-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S81-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SX18-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SX81-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-P8-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-L8-W": {
+      "name": "",
+      "description": ""
+    },
+    "2001-01-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-88-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SMIX-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-8S1-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-38-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-77-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S17-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-P81-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S13-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-S81-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SX18-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-SX81-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-P8-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001N-L8-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-88-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SMIX-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-8S1-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-38-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-77-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S17-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-P18-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S13-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-S81-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SX18-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-SX81-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-P8-G": {
+      "name": "",
+      "description": ""
+    },
+    "2001-L8-G": {
+      "name": "",
+      "description": ""
+    },
+    "S-01": {
+      "name": "",
+      "description": ""
+    },
+    "2001-01-O": {
+      "name": "",
+      "description": ""
+    },
+    "2001-01-V": {
+      "name": "",
+      "description": ""
+    },
+    "BASIC-SIDEBED-2w1": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-BEIGE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-CHAMPAGNE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-TAUPE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-BLUE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-GRAY": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-WHITE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-ROSE": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-PINK": {
+      "name": "",
+      "description": ""
+    },
+    "SH-90X50-GRAPHITE": {
+      "name": "",
+      "description": ""
+    },
+    "Whale": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-DARKBEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-DARKBEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-BROWN-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-BROWN-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-OLIVE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-WHALE-OLIVE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-POLICE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-POLICE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-CANDYCUTE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-CANDYCUTE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-CANDYCUTE-PINK-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-CANDYCUTE-PINK-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-BEARS-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-BEARS-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-BEARS-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-0.5TOG-BEARS-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-DARKBEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-DARKBEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-BROWN-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-BROWN-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-OLIVE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-WHALE-OLIVE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-POLICE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-POLICE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-POLICE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-POLICE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-CANDYCUTE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-CANDYCUTE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-CANDYCUTE-PINK-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-CANDYCUTE-PINK-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-BEARS-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-BEARS-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-BEARS-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-1.5TOG-BEARS-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-DARKBEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-DARKBEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-BROWN-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-BROWN-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-OLIVE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-WHALE-OLIVE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-POLICE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-POLICE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-POLICE-DARKBLUE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-POLICE-DARKBLUE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-CANDYCUTE-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-CANDYCUTE-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-CANDYCUTE-PINK-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-CANDYCUTE-PINK-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-BEARS-WHITE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-BEARS-WHITE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-BEARS-BEIGE-S": {
+      "name": "",
+      "description": ""
+    },
+    "SLEEPBAG-2.5TOG-BEARS-BEIGE-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-WHALE-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-WHALE-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-WHALE-DB-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-WHALE-DB-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-BEARS-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-BEARS-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-BEES-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-BEES-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-BEES-CH-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-BEES-CH-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-LULLABY-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-LULLABY-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-LULLABY-CH-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-LULLABY-CH-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-WHALE-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-WHALE-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-WHALE-DB-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-WHALE-DB-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-BEARS-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-BEARS-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-BEES-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-BEES-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-BEES-CH-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-BEES-CH-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-LULLABY-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-LULLABY-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-LULLABY-CH-S": {
+      "name": "",
+      "description": ""
+    },
+    "SBL-2.5-LULLABY-CH-M": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-WHALE-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-WHALE-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-WHALE-DB-S": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-WHALE-DB-M": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-BEARS-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-BEARS-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-BEES-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-BEES-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-BEES-CH-S": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-BEES-CH-M": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-LULLABY-W-S": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-LULLABY-W-M": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-LULLABY-CH-S": {
+      "name": "",
+      "description": ""
+    },
+    "SWADDLE-LULLABY-CH-M": {
+      "name": "",
+      "description": ""
+    }
+  }
+}

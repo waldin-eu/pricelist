@@ -19,6 +19,9 @@ category.html
 /photos
   manifest.json
   *.jpg|*.jpeg|*.png|*.webp
+/i18n
+  en.json
+  it.json
 /.github/workflows
   generate-manifest.yml
 ```
@@ -64,6 +67,17 @@ Add a column named one of:
 
 Put a full URL in that column. Example:
 - `https://raw.githubusercontent.com/<USER>/<REPO>/main/images/SKU123.jpg`
+
+## SKU language files
+
+- Category pages support SKU-based translations for `PRODUCT NAME` and `DESCRIPTION`.
+- Files:
+  - `i18n/en.json`
+  - `i18n/it.json`
+- Structure:
+  - `products.<SKU>.name`
+  - `products.<SKU>.description`
+- Language can be changed from the category page selector (English / Italiano).
 
 ## Local run
 
