@@ -13,6 +13,57 @@ function isProbablyImageUrl(v) {
   return s.startsWith("http") && (s.endsWith(".jpg") || s.endsWith(".jpeg") || s.endsWith(".png") || s.endsWith(".webp"));
 }
 
+function normalizeToken(v) {
+  return String(v || "").trim().toLowerCase();
+}
+
+function fileNameFromPath(path) {
+  const parts = String(path || "").split("/");
+  return parts[parts.length - 1] || "";
+}
+
+function stemFromFileName(name) {
+  return String(name || "").replace(/\.[^.]+$/, "");
+}
+
+function stemBeforeSuffix(stem) {
+  const m = String(stem || "").match(/^(.*?)(?:[_-][^_-]+)$/);
+  return m ? m[1] : "";
+}
+
+async function loadPhotoIndex() {
+  try {
+    const res = await fetch("photos/manifest.json", { cache: "no-store" });
+    if (!res.ok) return new Map();
+
+    const data = await res.json();
+    const files = Array.isArray(data.files) ? data.files : [];
+    const index = new Map();
+
+    files.forEach((path) => {
+      const fileName = fileNameFromPath(path);
+      const stem = stemFromFileName(fileName);
+      const fullStem = normalizeToken(stem);
+      const baseStem = normalizeToken(stemBeforeSuffix(stem));
+      const publicPath = `photos/${path}`;
+
+      if (fullStem && !index.has(fullStem)) index.set(fullStem, publicPath);
+      if (baseStem && !index.has(baseStem)) index.set(baseStem, publicPath);
+    });
+
+    return index;
+  } catch (_) {
+    return new Map();
+  }
+}
+
+function findSkuKey(keys) {
+  return keys.find((k) => {
+    const name = normalizeToken(k).replace(/\s+/g, " ");
+    return name.includes("sku") || name.includes("article number");
+  });
+}
+
 async function loadCsv(file) {
   const url = `csv/${file}`;
   const res = await fetch(url, { cache: "no-store" });
@@ -30,7 +81,7 @@ async function loadCsv(file) {
   });
 }
 
-function renderTable(rows, query) {
+function renderTable(rows, query, photoIndex) {
   const out = document.getElementById("out");
   if (!rows.length) {
     out.innerHTML = "<p>No rows in this CSV.</p>";
@@ -48,11 +99,13 @@ function renderTable(rows, query) {
   const imageKey =
     keys.find(k => ["image", "image_url", "photo", "photo_url", "img", "img_url"].includes(k.toLowerCase())) ||
     keys.find(k => filtered.some(r => isProbablyImageUrl(r[k])));
+  const skuKey = findSkuKey(keys);
+  const hasPhotoColumn = Boolean(imageKey || (skuKey && photoIndex.size > 0));
 
   const head = `
     <thead>
       <tr>
-        ${imageKey ? `<th>Photo</th>` : ""}
+        ${hasPhotoColumn ? `<th>Photo</th>` : ""}
         ${keys.map(k => `<th>${k}</th>`).join("")}
       </tr>
     </thead>
@@ -62,7 +115,13 @@ function renderTable(rows, query) {
     <tbody>
       ${filtered.map(r => `
         <tr>
-          ${imageKey ? `<td>${isProbablyImageUrl(r[imageKey]) ? `<img class="img" src="${r[imageKey]}" alt="">` : ""}</td>` : ""}
+          ${hasPhotoColumn ? `<td>${(() => {
+            const sku = normalizeToken(skuKey ? r[skuKey] : "");
+            const localPhoto = sku ? photoIndex.get(sku) : "";
+            if (localPhoto) return `<img class="img" src="${localPhoto}" alt="">`;
+            if (imageKey && isProbablyImageUrl(r[imageKey])) return `<img class="img" src="${r[imageKey]}" alt="">`;
+            return "";
+          })()}</td>` : ""}
           ${keys.map(k => `<td>${(r[k] ?? "").toString()}</td>`).join("")}
         </tr>
       `).join("")}
@@ -88,17 +147,18 @@ async function main() {
   titleEl.textContent = titleFromFilename(file);
 
   let rows = [];
+  let photoIndex = new Map();
   try {
-    rows = await loadCsv(file);
+    [rows, photoIndex] = await Promise.all([loadCsv(file), loadPhotoIndex()]);
   } catch (e) {
     document.getElementById("out").innerHTML = `<p>${e.message}</p>`;
     return;
   }
 
   const input = document.getElementById("q");
-  renderTable(rows, "");
+  renderTable(rows, "", photoIndex);
 
-  input.addEventListener("input", () => renderTable(rows, input.value));
+  input.addEventListener("input", () => renderTable(rows, input.value, photoIndex));
 }
 
 main();

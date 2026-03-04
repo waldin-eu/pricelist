@@ -3,7 +3,7 @@
 This is a lightweight static site that:
 - auto-creates a **menu** from every CSV in `/csv`
 - lets you **drill down** to a category page that lists all products in that CSV
-- supports an `image_url` column (or similar) to display photos inline
+- supports inline photos from CSV URLs and local SKU-matched files in `/photos`
 
 ## Repo structure
 
@@ -16,6 +16,9 @@ category.html
 /csv
   *.csv
   manifest.json
+/photos
+  manifest.json
+  *.jpg|*.jpeg|*.png|*.webp
 /.github/workflows
   generate-manifest.yml
 ```
@@ -28,13 +31,39 @@ category.html
 
 ## Add photos (optional)
 
+You can use one or both methods below.
+
+### Method 1: Local photo folder matched by SKU
+
 Add a column in your CSV named one of:
+- `ARTICLE NUMBER (SKU)` (already in your files)
+- any column containing `sku`
+
+Place photos in `/photos` and list them in `photos/manifest.json`.
+
+Filename rule:
+- If SKU is `ABC123`, these all match: `ABC123.jpg`, `ABC123_1.jpg`, `ABC123-front.png`, `ABC123-blue.webp`
+- Matching uses filename stem and "stem before suffix" (text before final `_...` or `-...`)
+
+Example `photos/manifest.json`:
+```json
+{
+  "files": [
+    "ABC123.jpg",
+    "ABC123_1.jpg",
+    "XYZ999-front.webp"
+  ]
+}
+```
+
+### Method 2: Image URL in CSV
+
+Add a column named one of:
 - `image_url` (recommended)
 - `photo_url`, `img_url`, etc.
 
-Put a full URL (or a relative path) in that column. Example:
-- Relative (best if you store images in the repo): `images/SKU123.jpg`
-- Absolute raw URL: `https://raw.githubusercontent.com/<USER>/<REPO>/main/images/SKU123.jpg`
+Put a full URL in that column. Example:
+- `https://raw.githubusercontent.com/<USER>/<REPO>/main/images/SKU123.jpg`
 
 ## Local run
 
@@ -79,4 +108,6 @@ After pushing:
 
 - **Menu is empty**: check that `/csv/manifest.json` exists in the repo and that CSV files are in `/csv`.
 - **CSV not loading**: make sure you’re using GitHub Pages (not opening the HTML directly from disk) or run a local server.
-- **Images not displaying**: ensure URLs are reachable publicly, or use repo-relative `images/...` paths.
+- **Images not displaying**:
+  - If using local `/photos`, check `photos/manifest.json` includes the file and filename matches SKU.
+  - If using URL columns, ensure URLs are reachable publicly.
