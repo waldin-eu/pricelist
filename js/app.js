@@ -28,7 +28,6 @@ async function main() {
     return `
       <a class="card" href="${href}">
         <div style="font-weight:700">${title}</div>
-        <div class="muted">${f}</div>
       </a>
     `;
   }).join("");
