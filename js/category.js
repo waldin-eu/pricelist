@@ -150,20 +150,33 @@ async function loadCsv(file) {
 
   return new Promise((resolve, reject) => {
     Papa.parse(text, {
-      header: true,
+      header: false,
       skipEmptyLines: true,
       dynamicTyping: false,
-      transformHeader: (header, index) => {
-        const base = String(header || "").trim() || `Column ${index + 1}`;
-        const seen = headerCounts.get(base) || 0;
-        headerCounts.set(base, seen + 1);
-        return seen === 0 ? base : `${base} (${seen + 1})`;
-      },
       complete: (results) => {
-        const rows = Array.isArray(results.data) ? results.data : [];
-        const keys = Array.isArray(results.meta?.fields) && results.meta.fields.length
-          ? results.meta.fields
-          : collectKeys(rows);
+        const allRows = Array.isArray(results.data) ? results.data : [];
+        if (!allRows.length) {
+          resolve({ rows: [], keys: [] });
+          return;
+        }
+
+        const rawHeaders = Array.isArray(allRows[0]) ? allRows[0] : [];
+        const keys = rawHeaders.map((header, index) => {
+          const base = String(header || "").trim() || `Column ${index + 1}`;
+          const seen = headerCounts.get(base) || 0;
+          headerCounts.set(base, seen + 1);
+          return seen === 0 ? base : `${base} (${seen + 1})`;
+        });
+
+        const rows = allRows.slice(1).map((cells) => {
+          const values = Array.isArray(cells) ? cells : [];
+          const row = {};
+          for (let i = 0; i < keys.length; i += 1) {
+            row[keys[i]] = values[i] ?? "";
+          }
+          return row;
+        });
+
         resolve({ rows, keys });
       },
       error: reject
