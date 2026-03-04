@@ -95,6 +95,20 @@ function columnClass(key) {
   return "";
 }
 
+function isBruttoPriceColumn(key) {
+  const name = normalizeHeaderName(key).replace(/\s+/g, " ");
+  return name.includes("brutto price");
+}
+
+function formatTwoDecimals(value) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  const normalized = raw.replace(",", ".");
+  const num = Number(normalized);
+  if (!Number.isFinite(num)) return raw;
+  return num.toFixed(2);
+}
+
 function escapeHtml(v) {
   return String(v)
     .replace(/&/g, "&amp;")
@@ -106,7 +120,10 @@ function escapeHtml(v) {
 
 function renderCell(key, value) {
   const cls = columnClass(key);
-  const text = (value ?? "").toString();
+  let text = (value ?? "").toString();
+  if (isBruttoPriceColumn(key)) {
+    text = formatTwoDecimals(text);
+  }
 
   if (cls === "col-description") {
     const hasText = text.trim().length > 0;
