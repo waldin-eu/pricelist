@@ -30,10 +30,17 @@ async function loadMenuTranslations(lang) {
 }
 
 async function main() {
-  const langEl = document.getElementById("lang");
-  const lang = getParam("lang") || "en";
+  const langButtons = Array.from(document.querySelectorAll(".lang-flag[data-lang]"));
+  let currentLang = getParam("lang") || "en";
   const menuEl = document.getElementById("menu");
-  langEl.value = lang;
+  const setActiveLang = (lang) => {
+    langButtons.forEach((btn) => {
+      const active = btn.dataset.lang === lang;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+  };
+  setActiveLang(currentLang);
 
   const res = await fetch("csv/manifest.json", { cache: "no-store" });
   if (!res.ok) {
@@ -49,10 +56,9 @@ async function main() {
     return;
   }
 
-  let labels = await loadMenuTranslations(langEl.value || "en");
+  let labels = await loadMenuTranslations(currentLang);
 
   const render = () => {
-    const currentLang = langEl.value || "en";
     menuEl.innerHTML = files.map(f => {
       const title = labels[f] || titleFromFilename(f);
       const href = `category.html?file=${encodeURIComponent(f)}&lang=${encodeURIComponent(currentLang)}`;
@@ -65,11 +71,16 @@ async function main() {
   };
 
   render();
-  langEl.addEventListener("change", async () => {
-    const currentLang = langEl.value || "en";
-    setParam("lang", currentLang);
-    labels = await loadMenuTranslations(currentLang);
-    render();
+  langButtons.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const nextLang = btn.dataset.lang || "en";
+      if (nextLang === currentLang) return;
+      currentLang = nextLang;
+      setParam("lang", currentLang);
+      setActiveLang(currentLang);
+      labels = await loadMenuTranslations(currentLang);
+      render();
+    });
   });
 }
 

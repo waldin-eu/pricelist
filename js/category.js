@@ -394,10 +394,18 @@ function renderTable(data, query, photoIndex) {
 
 async function main() {
   const file = getParam("file");
-  const lang = getParam("lang") || "en";
+  let currentLang = getParam("lang") || "en";
   const titleEl = document.getElementById("title");
   const outEl = document.getElementById("out");
-  const langEl = document.getElementById("lang");
+  const langButtons = Array.from(document.querySelectorAll(".lang-flag[data-lang]"));
+  const setActiveLang = (lang) => {
+    langButtons.forEach((btn) => {
+      const active = btn.dataset.lang === lang;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+  };
+  setActiveLang(currentLang);
 
   if (!file) {
     titleEl.textContent = "Missing file parameter";
@@ -406,7 +414,6 @@ async function main() {
   }
 
   titleEl.textContent = titleFromFilename(file);
-  langEl.value = lang;
 
   let rows = [];
   let keys = [];
@@ -416,7 +423,7 @@ async function main() {
     [{ rows, keys }, photoIndex, translationIndex] = await Promise.all([
       loadCsv(file),
       loadPhotoIndex(),
-      loadTranslations(lang)
+      loadTranslations(currentLang)
     ]);
   } catch (e) {
     outEl.innerHTML = `<p>${escapeHtml(e.message)}</p>`;
@@ -442,11 +449,16 @@ async function main() {
   render();
 
   input.addEventListener("input", render);
-  langEl.addEventListener("change", async () => {
-    const selected = langEl.value || "en";
-    setParam("lang", selected);
-    translationIndex = await loadTranslations(selected);
-    render();
+  langButtons.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const selected = btn.dataset.lang || "en";
+      if (selected === currentLang) return;
+      currentLang = selected;
+      setParam("lang", currentLang);
+      setActiveLang(currentLang);
+      translationIndex = await loadTranslations(currentLang);
+      render();
+    });
   });
 }
 

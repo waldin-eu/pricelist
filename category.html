@@ -16,11 +16,10 @@
 
       <div class="category-bar">
         <input id="q" placeholder="Search products..." />
-        <label for="lang" class="lang-label">Language</label>
-        <select id="lang" aria-label="Language">
-          <option value="en">English</option>
-          <option value="it">Italiano</option>
-        </select>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" class="lang-flag" data-lang="en" title="English" aria-label="English">🇬🇧</button>
+          <button type="button" class="lang-flag" data-lang="it" title="Italiano" aria-label="Italiano">🇮🇹</button>
+        </div>
       </div>
 
       <div id="out" class="category-out"></div>
