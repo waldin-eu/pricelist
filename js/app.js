@@ -26,8 +26,8 @@ async function main() {
     const title = titleFromFilename(f);
     const href = `category.html?file=${encodeURIComponent(f)}`;
     return `
-      <a class="card" href="${href}">
-        <div style="font-weight:700">${title}</div>
+      <a class="menu-card" href="${href}">
+        <div class="menu-title">${title}</div>
       </a>
     `;
   }).join("");
