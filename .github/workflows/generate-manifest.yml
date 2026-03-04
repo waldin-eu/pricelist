@@ -1,0 +1,36 @@
+name: Generate CSV manifest
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "csv/**/*.csv"
+      - ".github/workflows/generate-manifest.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate manifest.json
+        run: |
+          python - << 'PY'
+          import json, glob, os
+          files = sorted(glob.glob("csv/*.csv"))
+          names = [os.path.basename(f) for f in files]
+          with open("csv/manifest.json", "w", encoding="utf-8") as fp:
+              json.dump({"files": names}, fp, ensure_ascii=False, indent=2)
+          print("manifest.json generated with", len(names), "files")
+          PY
+
+      - name: Commit manifest.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add csv/manifest.json
+          git commit -m "Update CSV manifest" || echo "No changes to commit"
+          git push
