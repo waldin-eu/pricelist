@@ -19,6 +19,22 @@ function titleFromFilename(name) {
   return t;
 }
 
+async function loadMenuTranslations(lang) {
+  try {
+    const res = await fetch(`i18n/menu_${lang}.json`, { cache: "no-store" });
+    if (!res.ok) return {};
+    const data = await res.json();
+    if (!data || typeof data.labels !== "object") return {};
+    return data.labels;
+  } catch (_) {
+    return {};
+  }
+}
+
+function backLabel(lang) {
+  return lang === "it" ? "Torna alle categorie" : "Back to categories";
+}
+
 function isProbablyImageUrl(v) {
   if (!v) return false;
   const s = String(v).toLowerCase();
@@ -397,6 +413,7 @@ async function main() {
   let currentLang = getParam("lang") || "en";
   const titleEl = document.getElementById("title");
   const outEl = document.getElementById("out");
+  const backEl = document.getElementById("back-link");
   const langButtons = Array.from(document.querySelectorAll(".lang-flag[data-lang]"));
   const setActiveLang = (lang) => {
     langButtons.forEach((btn) => {
@@ -413,17 +430,17 @@ async function main() {
     return;
   }
 
-  titleEl.textContent = titleFromFilename(file);
-
   let rows = [];
   let keys = [];
   let photoIndex = new Map();
   let translationIndex = new Map();
+  let menuLabels = {};
   try {
-    [{ rows, keys }, photoIndex, translationIndex] = await Promise.all([
+    [{ rows, keys }, photoIndex, translationIndex, menuLabels] = await Promise.all([
       loadCsv(file),
       loadPhotoIndex(),
-      loadTranslations(currentLang)
+      loadTranslations(currentLang),
+      loadMenuTranslations(currentLang)
     ]);
   } catch (e) {
     outEl.innerHTML = `<p>${escapeHtml(e.message)}</p>`;
@@ -442,6 +459,9 @@ async function main() {
 
   const input = document.getElementById("q");
   const render = () => {
+    titleEl.textContent = menuLabels[file] || titleFromFilename(file);
+    backEl.textContent = backLabel(currentLang);
+    backEl.href = `index.html?lang=${encodeURIComponent(currentLang)}`;
     const translatedRows = applyTranslations(rows, keys, translationIndex);
     renderTable({ rows: translatedRows, keys }, input.value, photoIndex);
   };
@@ -456,7 +476,10 @@ async function main() {
       currentLang = selected;
       setParam("lang", currentLang);
       setActiveLang(currentLang);
-      translationIndex = await loadTranslations(currentLang);
+      [translationIndex, menuLabels] = await Promise.all([
+        loadTranslations(currentLang),
+        loadMenuTranslations(currentLang)
+      ]);
       render();
     });
   });
