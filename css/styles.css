@@ -325,9 +325,9 @@ body.category-page {
 }
 
 .category-out table {
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   background: #fff;
   border: 1px solid #e3d9d2;
   border-radius: 12px;
@@ -336,7 +336,7 @@ body.category-page {
 
 .table-scroll {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: visible;
   overflow-y: visible;
   border-radius: 12px;
 }
@@ -344,10 +344,12 @@ body.category-page {
 .category-out th,
 .category-out td {
   border-bottom: 1px solid #efe7e1;
-  padding: 10px 12px;
+  padding: 8px 10px;
   text-align: left;
   vertical-align: top;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .category-out th {
@@ -355,26 +357,18 @@ body.category-page {
   top: 0;
   background: #f9f4f0;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.2;
 }
 
 .category-out td {
-  font-size: 14px;
-  line-height: 1.35;
+  font-size: 12px;
+  line-height: 1.3;
 }
 
 .category-out td.col-description {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.25;
-  min-width: 320px;
-  max-width: 420px;
-  white-space: normal;
-}
-
-.category-out th.col-description {
-  min-width: 320px;
-  white-space: nowrap;
 }
 
 .desc-wrap {
