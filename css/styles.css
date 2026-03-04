@@ -346,6 +346,9 @@ body.category-page {
   top: 0;
   background: #f9f4f0;
   font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .category-out td {
@@ -356,6 +359,35 @@ body.category-page {
 .category-out td.col-description {
   font-size: 12px;
   line-height: 1.25;
+}
+
+.desc-wrap {
+  display: block;
+}
+
+.desc-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.desc-text.is-collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.5em;
+}
+
+.desc-toggle {
+  margin-top: 4px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #3f3028;
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .img {

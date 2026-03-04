@@ -70,6 +70,38 @@ function columnClass(key) {
   return "";
 }
 
+function escapeHtml(v) {
+  return String(v)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderCell(key, value) {
+  const cls = columnClass(key);
+  const text = (value ?? "").toString();
+
+  if (cls === "col-description") {
+    const hasLongText = text.trim().length > 140;
+    const safeText = escapeHtml(text);
+    if (!hasLongText) {
+      return `<td class="${cls}"><div class="desc-text">${safeText}</div></td>`;
+    }
+    return `
+      <td class="${cls}">
+        <div class="desc-wrap">
+          <div class="desc-text is-collapsed">${safeText}</div>
+          <button type="button" class="desc-toggle">Show more</button>
+        </div>
+      </td>
+    `;
+  }
+
+  return `<td class="${cls}">${escapeHtml(text)}</td>`;
+}
+
 async function loadCsv(file) {
   const url = `csv/${file}`;
   const res = await fetch(url, { cache: "no-store" });
@@ -128,7 +160,7 @@ function renderTable(rows, query, photoIndex) {
             if (imageKey && isProbablyImageUrl(r[imageKey])) return `<img class="img" src="${r[imageKey]}" alt="">`;
             return "";
           })()}</td>` : ""}
-          ${keys.map(k => `<td class="${columnClass(k)}">${(r[k] ?? "").toString()}</td>`).join("")}
+          ${keys.map(k => renderCell(k, r[k])).join("")}
         </tr>
       `).join("")}
     </tbody>
@@ -143,10 +175,11 @@ function renderTable(rows, query, photoIndex) {
 async function main() {
   const file = getParam("file");
   const titleEl = document.getElementById("title");
+  const outEl = document.getElementById("out");
 
   if (!file) {
     titleEl.textContent = "Missing file parameter";
-    document.getElementById("out").innerHTML = "<p>Open from the categories page.</p>";
+    outEl.innerHTML = "<p>Open from the categories page.</p>";
     return;
   }
 
@@ -157,9 +190,19 @@ async function main() {
   try {
     [rows, photoIndex] = await Promise.all([loadCsv(file), loadPhotoIndex()]);
   } catch (e) {
-    document.getElementById("out").innerHTML = `<p>${e.message}</p>`;
+    outEl.innerHTML = `<p>${escapeHtml(e.message)}</p>`;
     return;
   }
+
+  outEl.addEventListener("click", (e) => {
+    const btn = e.target.closest(".desc-toggle");
+    if (!btn) return;
+    const wrap = btn.closest(".desc-wrap");
+    const textEl = wrap ? wrap.querySelector(".desc-text") : null;
+    if (!textEl) return;
+    const expanded = textEl.classList.toggle("is-collapsed");
+    btn.textContent = expanded ? "Show more" : "Show less";
+  });
 
   const input = document.getElementById("q");
   renderTable(rows, "", photoIndex);
