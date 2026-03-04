@@ -32,7 +32,7 @@ async function loadMenuTranslations(lang) {
 }
 
 function backLabel(lang) {
-  return lang === "it" ? "Torna alle categorie" : "Back to categories";
+  return lang === "it" ? "Torna al menu" : "Back to menu";
 }
 
 function isProbablyImageUrl(v) {
