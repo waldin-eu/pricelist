@@ -291,7 +291,14 @@ function renderTable(data, query, photoIndex) {
   const imageKey =
     keys.find(k => ["image", "image_url", "photo", "photo_url", "img", "img_url"].includes(k.toLowerCase())) ||
     keys.find(k => filtered.some(r => isProbablyImageUrl(r[k])));
-  const hasPhotoColumn = Boolean(imageKey || (skuKey && photoIndex.size > 0));
+  const hasAnyPhoto = filtered.some((r) => {
+    const sku = firstNonEmptyValue(r, skuCandidates);
+    const localPhoto = sku ? photoIndex.get(sku) : "";
+    if (localPhoto) return true;
+    if (imageKey && isProbablyImageUrl(r[imageKey])) return true;
+    return false;
+  });
+  const hasPhotoColumn = hasAnyPhoto;
 
   const head = `
     <thead>
