@@ -75,6 +75,18 @@ function findEanKey(keys) {
   });
 }
 
+function filterKeysByMatch(keys, matcher) {
+  return keys.filter((k) => matcher(k));
+}
+
+function firstNonEmptyValue(row, keys) {
+  for (let i = 0; i < keys.length; i += 1) {
+    const v = normalizeToken(row?.[keys[i]]);
+    if (v) return v;
+  }
+  return "";
+}
+
 function columnClass(key) {
   const name = normalizeToken(key).replace(/\s+/g, " ");
   if (name.includes("description")) return "col-description";
@@ -170,11 +182,18 @@ function renderTable(data, query, photoIndex) {
     out.innerHTML = "<p>No columns found in this CSV.</p>";
     return;
   }
-  const skuKey = findSkuKey(keys);
-  const eanKey = findEanKey(keys);
+  const rowKeys = collectKeys(rows);
+  const skuKey = findSkuKey(keys) || findSkuKey(rowKeys);
+  const eanKey = findEanKey(keys) || findEanKey(rowKeys);
+  const skuCandidates = skuKey
+    ? [skuKey]
+    : filterKeysByMatch(rowKeys, (k) => normalizeHeaderName(k).includes("sku") || normalizeHeaderName(k).includes("article number") || normalizeHeaderName(k).includes("article no"));
+  const eanCandidates = eanKey
+    ? [eanKey]
+    : filterKeysByMatch(rowKeys, (k) => normalizeHeaderName(k).includes("ean"));
   const eligibleRows = rows.filter((r) => {
-    const sku = normalizeToken(skuKey ? r[skuKey] : "");
-    const ean = normalizeToken(eanKey ? r[eanKey] : "");
+    const sku = firstNonEmptyValue(r, skuCandidates);
+    const ean = firstNonEmptyValue(r, eanCandidates);
     return Boolean(sku && ean);
   });
 
@@ -209,7 +228,7 @@ function renderTable(data, query, photoIndex) {
       ${filtered.map(r => `
         <tr>
           ${hasPhotoColumn ? `<td>${(() => {
-            const sku = normalizeToken(skuKey ? r[skuKey] : "");
+            const sku = firstNonEmptyValue(r, skuCandidates);
             const localPhoto = sku ? photoIndex.get(sku) : "";
             if (localPhoto) return `<img class="img" src="${localPhoto}" alt="">`;
             if (imageKey && isProbablyImageUrl(r[imageKey])) return `<img class="img" src="${r[imageKey]}" alt="">`;
