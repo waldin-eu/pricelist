@@ -4,30 +4,23 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Category</title>
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 24px; }
-    a { color: inherit; }
-    .top { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-    input { padding:10px 12px; border-radius:10px; border:1px solid #ddd; min-width: 260px; }
-    table { width:100%; border-collapse: collapse; margin-top: 16px; }
-    th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; vertical-align: top; }
-    th { position: sticky; top: 0; background: white; }
-    .img { max-width: 90px; max-height: 90px; border-radius: 10px; border:1px solid #eee; object-fit: cover; }
-    .muted { color:#666; font-size: 14px; }
-    .bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top: 10px; }
-  </style>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
-  <div class="top">
-    <a href="index.html">← Back to categories</a>
-    <h1 id="title" style="margin:0">Category</h1>
-  </div>
+<body class="category-page">
+  <main class="category-wrap">
+    <section class="category-panel">
+      <div class="category-top">
+        <a class="category-back" href="index.html">Back to categories</a>
+        <h1 id="title" class="category-title">Category</h1>
+      </div>
 
-  <div class="bar">
-    <input id="q" placeholder="Search…" />
-  </div>
+      <div class="category-bar">
+        <input id="q" placeholder="Search products..." />
+      </div>
 
-  <div id="out"></div>
+      <div id="out" class="category-out"></div>
+    </section>
+  </main>
 
   <!-- CSV parser -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>

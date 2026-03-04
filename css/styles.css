@@ -249,3 +249,128 @@ a.menu-card:hover {
   letter-spacing: 0.01em;
   line-height: 1.3;
 }
+
+/* Category page */
+body.category-page {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 80% 10%, #f8f3ef 0%, #ede6e0 55%, #e2dad4 100%);
+}
+
+.category-wrap {
+  min-height: 100vh;
+  padding: 28px 20px;
+}
+
+.category-panel {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.93);
+  border: 1px solid #d9cec6;
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(58, 48, 42, 0.13);
+  padding: 20px;
+}
+
+.category-top {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.category-back {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #3f3028;
+  font-weight: 500;
+  border: 1px solid #dbcfc7;
+  border-radius: 12px;
+  padding: 8px 12px;
+  background: #f6f1ed;
+}
+
+.category-back::before {
+  content: "←";
+  margin-right: 8px;
+}
+
+.category-title {
+  margin: 0;
+  font-size: clamp(22px, 2.6vw, 34px);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.category-bar {
+  margin-top: 14px;
+}
+
+.category-bar input {
+  max-width: 360px;
+}
+
+.category-out {
+  margin-top: 14px;
+}
+
+.category-out .muted {
+  margin: 0 0 10px 0;
+  color: #594c45;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.category-out table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e3d9d2;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.category-out th,
+.category-out td {
+  border-bottom: 1px solid #efe7e1;
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.category-out th {
+  position: sticky;
+  top: 0;
+  background: #f9f4f0;
+  font-weight: 500;
+}
+
+.category-out td {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.img {
+  max-width: 90px;
+  max-height: 90px;
+  border-radius: 10px;
+  border: 1px solid #eadfd8;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .category-panel {
+    padding: 16px;
+  }
+
+  .category-title {
+    width: 100%;
+  }
+
+  .category-bar input {
+    max-width: 100%;
+  }
+}
