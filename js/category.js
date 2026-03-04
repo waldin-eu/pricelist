@@ -95,6 +95,11 @@ function columnClass(key) {
   return "";
 }
 
+function isHiddenDisplayColumn(key) {
+  const name = normalizeHeaderName(key).replace(/\s+/g, " ");
+  return name === "product photo";
+}
+
 function isBruttoPriceColumn(key) {
   const name = normalizeHeaderName(key).replace(/\s+/g, " ");
   return name.includes("brutto price");
@@ -262,6 +267,7 @@ function renderTable(data, query, photoIndex) {
     return;
   }
   const rowKeys = collectKeys(rows);
+  const displayKeys = keys.filter((k) => !isHiddenDisplayColumn(k));
   const skuKey = findSkuKey(keys) || findSkuKey(rowKeys);
   const eanKey = findEanKey(keys) || findEanKey(rowKeys);
   const skuCandidates = skuKey
@@ -284,13 +290,13 @@ function renderTable(data, query, photoIndex) {
   const q = (query || "").toLowerCase().trim();
 
   const filtered = !q ? eligibleRows : eligibleRows.filter(r =>
-    keys.some(k => String(r[k] ?? "").toLowerCase().includes(q))
+    rowKeys.some(k => String(r[k] ?? "").toLowerCase().includes(q))
   );
 
   // Try to find an image column by common names or by content
   const imageKey =
-    keys.find(k => ["image", "image_url", "photo", "photo_url", "img", "img_url"].includes(k.toLowerCase())) ||
-    keys.find(k => filtered.some(r => isProbablyImageUrl(r[k])));
+    rowKeys.find(k => ["image", "image_url", "photo", "photo_url", "img", "img_url"].includes(k.toLowerCase())) ||
+    rowKeys.find(k => filtered.some(r => isProbablyImageUrl(r[k])));
   const hasAnyPhoto = filtered.some((r) => {
     const sku = firstNonEmptyValue(r, skuCandidates);
     const localPhoto = sku ? photoIndex.get(sku) : "";
@@ -304,7 +310,7 @@ function renderTable(data, query, photoIndex) {
     <thead>
       <tr>
         ${hasPhotoColumn ? `<th>Photo</th>` : ""}
-        ${keys.map(k => `<th class="${columnClass(k)}">${escapeHtml(k)}</th>`).join("")}
+        ${displayKeys.map(k => `<th class="${columnClass(k)}">${escapeHtml(k)}</th>`).join("")}
       </tr>
     </thead>
   `;
@@ -320,7 +326,7 @@ function renderTable(data, query, photoIndex) {
             if (imageKey && isProbablyImageUrl(r[imageKey])) return `<img class="img" src="${r[imageKey]}" alt="">`;
             return "";
           })()}</td>` : ""}
-          ${keys.map(k => renderCell(k, r[k])).join("")}
+          ${displayKeys.map(k => renderCell(k, r[k])).join("")}
         </tr>
       `).join("")}
     </tbody>
