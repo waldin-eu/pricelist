@@ -109,6 +109,20 @@ function renderCell(key, value) {
   return `<td class="${cls}">${escapeHtml(text)}</td>`;
 }
 
+function collectKeys(rows) {
+  const keys = [];
+  const seen = new Set();
+  rows.forEach((row) => {
+    Object.keys(row || {}).forEach((key) => {
+      if (key === "__parsed_extra") return;
+      if (seen.has(key)) return;
+      seen.add(key);
+      keys.push(key);
+    });
+  });
+  return keys;
+}
+
 async function loadCsv(file) {
   const url = `csv/${file}`;
   const res = await fetch(url, { cache: "no-store" });
@@ -133,7 +147,11 @@ function renderTable(rows, query, photoIndex) {
     return;
   }
 
-  const keys = Object.keys(rows[0] || {});
+  const keys = collectKeys(rows);
+  if (!keys.length) {
+    out.innerHTML = "<p>No columns found in this CSV.</p>";
+    return;
+  }
   const skuKey = findSkuKey(keys);
   const eanKey = findEanKey(keys);
   const eligibleRows = rows.filter((r) => {
