@@ -318,6 +318,12 @@ body.category-page {
   flex: 1 1 320px;
 }
 
+.lang-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #4b3f39;
+}
+
 .category-bar select {
   border: 1px solid var(--border);
   border-radius: 12px;
