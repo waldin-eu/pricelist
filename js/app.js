@@ -12,37 +12,21 @@ function setParam(name, value) {
   window.history.replaceState({}, "", url.toString());
 }
 
-function titleFromFilename(name, lang) {
+function titleFromFilename(name) {
   let t = name.replace(/^PriceList_\d{4}_/i, "").replace(/\.csv$/i, "");
-  t = t.replace(/_/g, " ").trim();
+  return t.replace(/_/g, " ").trim();
+}
 
-  const key = t.toLowerCase();
-  const map = {
-    en: {
-      "sleepbag": "Sleeping Bags",
-      "7-in-1 baby beds with accessori": "7-in-1 Baby Beds With Accessories",
-      "5-in-1 baby beds": "5-in-1 Baby Beds",
-      "side beds 2-in-1": "Side Beds 2-in-1",
-      "bamboo duvets with filling": "Bamboo Duvets With Filling",
-      "cotton duvets with filling": "Cotton Duvets With Filling",
-      "moses baskets": "Moses Baskets",
-      "dresser": "Dresser",
-      "playpen": "Playpen"
-    },
-    it: {
-      "sleepbag": "Sacchi Nanna",
-      "7-in-1 baby beds with accessori": "Lettini 7-in-1 Con Accessori",
-      "5-in-1 baby beds": "Lettini 5-in-1",
-      "side beds 2-in-1": "Lettini Affiancabili 2-in-1",
-      "bamboo duvets with filling": "Piumoni In Bambu Con Imbottitura",
-      "cotton duvets with filling": "Piumoni In Cotone Con Imbottitura",
-      "moses baskets": "Ceste Di Mose",
-      "dresser": "Cassettiera",
-      "playpen": "Box"
-    }
-  };
-
-  return (map[lang] && map[lang][key]) || (map.en[key]) || t;
+async function loadMenuTranslations(lang) {
+  try {
+    const res = await fetch(`i18n/menu_${lang}.json`, { cache: "no-store" });
+    if (!res.ok) return {};
+    const data = await res.json();
+    if (!data || typeof data.labels !== "object") return {};
+    return data.labels;
+  } catch (_) {
+    return {};
+  }
 }
 
 async function main() {
@@ -65,10 +49,12 @@ async function main() {
     return;
   }
 
+  let labels = await loadMenuTranslations(langEl.value || "en");
+
   const render = () => {
     const currentLang = langEl.value || "en";
     menuEl.innerHTML = files.map(f => {
-      const title = titleFromFilename(f, currentLang);
+      const title = labels[f] || titleFromFilename(f);
       const href = `category.html?file=${encodeURIComponent(f)}&lang=${encodeURIComponent(currentLang)}`;
       return `
         <a class="menu-card" href="${href}">
@@ -79,9 +65,10 @@ async function main() {
   };
 
   render();
-  langEl.addEventListener("change", () => {
+  langEl.addEventListener("change", async () => {
     const currentLang = langEl.value || "en";
     setParam("lang", currentLang);
+    labels = await loadMenuTranslations(currentLang);
     render();
   });
 }

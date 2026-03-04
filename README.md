@@ -22,6 +22,8 @@ category.html
 /i18n
   en.json
   it.json
+  menu_en.json
+  menu_it.json
 /.github/workflows
   generate-manifest.yml
 ```
@@ -78,6 +80,9 @@ Put a full URL in that column. Example:
   - `products.<SKU>.name`
   - `products.<SKU>.description`
 - Language can be changed from the category page selector (English / Italiano).
+- Menu labels are translated from:
+  - `i18n/menu_en.json`
+  - `i18n/menu_it.json`
 
 ## Local run
 
