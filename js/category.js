@@ -64,6 +64,13 @@ function findSkuKey(keys) {
   });
 }
 
+function findEanKey(keys) {
+  return keys.find((k) => {
+    const name = normalizeToken(k).replace(/\s+/g, " ");
+    return name === "ean" || name.includes(" ean");
+  });
+}
+
 function columnClass(key) {
   const name = normalizeToken(key).replace(/\s+/g, " ");
   if (name.includes("description")) return "col-description";
@@ -127,9 +134,22 @@ function renderTable(rows, query, photoIndex) {
   }
 
   const keys = Object.keys(rows[0] || {});
+  const skuKey = findSkuKey(keys);
+  const eanKey = findEanKey(keys);
+  const eligibleRows = rows.filter((r) => {
+    const sku = normalizeToken(skuKey ? r[skuKey] : "");
+    const ean = normalizeToken(eanKey ? r[eanKey] : "");
+    return Boolean(sku && ean);
+  });
+
+  if (!eligibleRows.length) {
+    out.innerHTML = "<p>No rows with both SKU and EAN.</p>";
+    return;
+  }
+
   const q = (query || "").toLowerCase().trim();
 
-  const filtered = !q ? rows : rows.filter(r =>
+  const filtered = !q ? eligibleRows : eligibleRows.filter(r =>
     keys.some(k => String(r[k] ?? "").toLowerCase().includes(q))
   );
 
@@ -137,7 +157,6 @@ function renderTable(rows, query, photoIndex) {
   const imageKey =
     keys.find(k => ["image", "image_url", "photo", "photo_url", "img", "img_url"].includes(k.toLowerCase())) ||
     keys.find(k => filtered.some(r => isProbablyImageUrl(r[k])));
-  const skuKey = findSkuKey(keys);
   const hasPhotoColumn = Boolean(imageKey || (skuKey && photoIndex.size > 0));
 
   const head = `
@@ -167,7 +186,7 @@ function renderTable(rows, query, photoIndex) {
   `;
 
   out.innerHTML = `
-    <p class="muted">Showing ${filtered.length} / ${rows.length} products</p>
+    <p class="muted">Showing ${filtered.length} / ${eligibleRows.length} products</p>
     <table>${head}${body}</table>
   `;
 }
