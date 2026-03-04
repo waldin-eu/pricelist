@@ -2,6 +2,7 @@ function titleFromFilename(name) {
   // Example: PriceList_2026_Side_beds_2-in-1.csv -> Side beds 2-in-1
   let t = name.replace(/^PriceList_\d{4}_/i, "").replace(/\.csv$/i, "");
   t = t.replace(/_/g, " ").trim();
+  if (/^sleepbag$/i.test(t)) return "Sleeping Bags";
   return t;
 }
 

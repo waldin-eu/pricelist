@@ -4,7 +4,9 @@ function getParam(name) {
 
 function titleFromFilename(name) {
   let t = name.replace(/^PriceList_\d{4}_/i, "").replace(/\.csv$/i, "");
-  return t.replace(/_/g, " ").trim();
+  t = t.replace(/_/g, " ").trim();
+  if (/^sleepbag$/i.test(t)) return "Sleeping Bags";
+  return t;
 }
 
 function isProbablyImageUrl(v) {
