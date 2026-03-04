@@ -49,7 +49,11 @@ async function main() {
   }
 
   const data = await res.json();
-  const files = data.files || [];
+  const hiddenMenuFiles = new Set([
+    "PriceList_2026_Playpen.csv",
+    "PriceList_2026_Dresser.csv"
+  ]);
+  const files = (data.files || []).filter((f) => !hiddenMenuFiles.has(f));
 
   if (!files.length) {
     menuEl.innerHTML = `<p>No CSV files found in <code>/csv</code>.</p>`;
