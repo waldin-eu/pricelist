@@ -91,9 +91,9 @@ function renderCell(key, value) {
   const text = (value ?? "").toString();
 
   if (cls === "col-description") {
-    const hasLongText = text.trim().length > 140;
+    const hasText = text.trim().length > 0;
     const safeText = escapeHtml(text);
-    if (!hasLongText) {
+    if (!hasText) {
       return `<td class="${cls}"><div class="desc-text">${safeText}</div></td>`;
     }
     return `
@@ -187,7 +187,9 @@ function renderTable(rows, query, photoIndex) {
 
   out.innerHTML = `
     <p class="muted">Showing ${filtered.length} / ${eligibleRows.length} products</p>
-    <table>${head}${body}</table>
+    <div class="table-scroll">
+      <table>${head}${body}</table>
+    </div>
   `;
 }
 
