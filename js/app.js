@@ -17,6 +17,10 @@ function titleFromFilename(name) {
   return t.replace(/_/g, " ").trim();
 }
 
+function menuPhotoPath(label) {
+  return `photos/menu/${encodeURIComponent(label)}.jpg`;
+}
+
 async function loadMenuTranslations(lang) {
   try {
     const res = await fetch(`i18n/menu_${lang}.json`, { cache: "no-store" });
@@ -61,13 +65,17 @@ async function main() {
   }
 
   let labels = await loadMenuTranslations(currentLang);
+  const englishLabels = await loadMenuTranslations("en");
 
   const render = () => {
     menuEl.innerHTML = files.map(f => {
       const title = labels[f] || titleFromFilename(f);
+      const imageLabel = englishLabels[f] || titleFromFilename(f);
+      const imagePath = menuPhotoPath(imageLabel);
       const href = `category.html?file=${encodeURIComponent(f)}&lang=${encodeURIComponent(currentLang)}`;
       return `
         <a class="menu-card" href="${href}">
+          <img class="menu-photo" src="${imagePath}" alt="" loading="lazy" onerror="this.style.display='none'">
           <div class="menu-title">${title}</div>
         </a>
       `;
