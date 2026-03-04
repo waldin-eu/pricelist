@@ -17,6 +17,10 @@ function normalizeToken(v) {
   return String(v || "").trim().toLowerCase();
 }
 
+function normalizeHeaderName(v) {
+  return normalizeToken(v).replace(/[^a-z0-9]+/g, " ");
+}
+
 function fileNameFromPath(path) {
   const parts = String(path || "").split("/");
   return parts[parts.length - 1] || "";
@@ -59,15 +63,15 @@ async function loadPhotoIndex() {
 
 function findSkuKey(keys) {
   return keys.find((k) => {
-    const name = normalizeToken(k).replace(/\s+/g, " ");
-    return name.includes("sku") || name.includes("article number");
+    const name = normalizeHeaderName(k).replace(/\s+/g, " ");
+    return name.includes("sku") || name.includes("article number") || name.includes("article no");
   });
 }
 
 function findEanKey(keys) {
   return keys.find((k) => {
-    const name = normalizeToken(k).replace(/\s+/g, " ");
-    return name === "ean" || name.includes(" ean");
+    const name = normalizeHeaderName(k).replace(/\s+/g, " ");
+    return name.includes("ean");
   });
 }
 
