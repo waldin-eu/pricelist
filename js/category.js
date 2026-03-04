@@ -128,26 +128,40 @@ async function loadCsv(file) {
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load ${url} (${res.status})`);
   const text = await res.text();
+  const headerCounts = new Map();
 
   return new Promise((resolve, reject) => {
     Papa.parse(text, {
       header: true,
       skipEmptyLines: true,
       dynamicTyping: false,
-      complete: (results) => resolve(results.data),
+      transformHeader: (header, index) => {
+        const base = String(header || "").trim() || `Column ${index + 1}`;
+        const seen = headerCounts.get(base) || 0;
+        headerCounts.set(base, seen + 1);
+        return seen === 0 ? base : `${base} (${seen + 1})`;
+      },
+      complete: (results) => {
+        const rows = Array.isArray(results.data) ? results.data : [];
+        const keys = Array.isArray(results.meta?.fields) && results.meta.fields.length
+          ? results.meta.fields
+          : collectKeys(rows);
+        resolve({ rows, keys });
+      },
       error: reject
     });
   });
 }
 
-function renderTable(rows, query, photoIndex) {
+function renderTable(data, query, photoIndex) {
   const out = document.getElementById("out");
+  const rows = data?.rows || [];
+  const keys = data?.keys || [];
   if (!rows.length) {
     out.innerHTML = "<p>No rows in this CSV.</p>";
     return;
   }
 
-  const keys = collectKeys(rows);
   if (!keys.length) {
     out.innerHTML = "<p>No columns found in this CSV.</p>";
     return;
@@ -181,7 +195,7 @@ function renderTable(rows, query, photoIndex) {
     <thead>
       <tr>
         ${hasPhotoColumn ? `<th>Photo</th>` : ""}
-        ${keys.map(k => `<th class="${columnClass(k)}">${k}</th>`).join("")}
+        ${keys.map(k => `<th class="${columnClass(k)}">${escapeHtml(k)}</th>`).join("")}
       </tr>
     </thead>
   `;
@@ -225,9 +239,10 @@ async function main() {
   titleEl.textContent = titleFromFilename(file);
 
   let rows = [];
+  let keys = [];
   let photoIndex = new Map();
   try {
-    [rows, photoIndex] = await Promise.all([loadCsv(file), loadPhotoIndex()]);
+    [{ rows, keys }, photoIndex] = await Promise.all([loadCsv(file), loadPhotoIndex()]);
   } catch (e) {
     outEl.innerHTML = `<p>${escapeHtml(e.message)}</p>`;
     return;
@@ -244,9 +259,9 @@ async function main() {
   });
 
   const input = document.getElementById("q");
-  renderTable(rows, "", photoIndex);
+  renderTable({ rows, keys }, "", photoIndex);
 
-  input.addEventListener("input", () => renderTable(rows, input.value, photoIndex));
+  input.addEventListener("input", () => renderTable({ rows, keys }, input.value, photoIndex));
 }
 
 main();
