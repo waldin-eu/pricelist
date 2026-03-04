@@ -141,6 +141,53 @@ function collectKeys(rows) {
   return keys;
 }
 
+function combineWithComma(left, right) {
+  const a = (left ?? "").toString().trim();
+  const b = (right ?? "").toString().trim();
+  if (a && b) return `${a}, ${b}`;
+  return a || b || "";
+}
+
+function transformColumns(rows, keys) {
+  const nextKeys = [...keys];
+  const key12 = nextKeys[11];
+  const key13 = nextKeys[12];
+  const key14 = nextKeys[13];
+  const key15 = nextKeys[14];
+
+  if (key12 && key13) {
+    rows.forEach((row) => {
+      row[key12] = combineWithComma(row[key12], row[key13]);
+    });
+    nextKeys.splice(12, 1);
+    rows.forEach((row) => {
+      delete row[key13];
+    });
+  }
+
+  if (key14 && key15) {
+    rows.forEach((row) => {
+      row[key14] = combineWithComma(row[key14], row[key15]);
+    });
+    const idx15 = nextKeys.indexOf(key15);
+    if (idx15 !== -1) nextKeys.splice(idx15, 1);
+    rows.forEach((row) => {
+      delete row[key15];
+    });
+  }
+
+  const photosKey = nextKeys.find((k) => normalizeHeaderName(k) === "photos");
+  if (photosKey) {
+    const idx = nextKeys.indexOf(photosKey);
+    if (idx !== -1) nextKeys.splice(idx, 1);
+    rows.forEach((row) => {
+      delete row[photosKey];
+    });
+  }
+
+  return { rows, keys: nextKeys };
+}
+
 async function loadCsv(file) {
   const url = `csv/${file}`;
   const res = await fetch(url, { cache: "no-store" });
@@ -177,7 +224,7 @@ async function loadCsv(file) {
           return row;
         });
 
-        resolve({ rows, keys });
+        resolve(transformColumns(rows, keys));
       },
       error: reject
     });
