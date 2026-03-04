@@ -64,6 +64,12 @@ function findSkuKey(keys) {
   });
 }
 
+function columnClass(key) {
+  const name = normalizeToken(key).replace(/\s+/g, " ");
+  if (name.includes("description")) return "col-description";
+  return "";
+}
+
 async function loadCsv(file) {
   const url = `csv/${file}`;
   const res = await fetch(url, { cache: "no-store" });
@@ -106,7 +112,7 @@ function renderTable(rows, query, photoIndex) {
     <thead>
       <tr>
         ${hasPhotoColumn ? `<th>Photo</th>` : ""}
-        ${keys.map(k => `<th>${k}</th>`).join("")}
+        ${keys.map(k => `<th class="${columnClass(k)}">${k}</th>`).join("")}
       </tr>
     </thead>
   `;
@@ -122,7 +128,7 @@ function renderTable(rows, query, photoIndex) {
             if (imageKey && isProbablyImageUrl(r[imageKey])) return `<img class="img" src="${r[imageKey]}" alt="">`;
             return "";
           })()}</td>` : ""}
-          ${keys.map(k => `<td>${(r[k] ?? "").toString()}</td>`).join("")}
+          ${keys.map(k => `<td class="${columnClass(k)}">${(r[k] ?? "").toString()}</td>`).join("")}
         </tr>
       `).join("")}
     </tbody>

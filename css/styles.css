@@ -353,6 +353,11 @@ body.category-page {
   line-height: 1.35;
 }
 
+.category-out td.col-description {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
 .img {
   max-width: 90px;
   max-height: 90px;
