@@ -78,19 +78,14 @@ function renderTable(rows, query) {
 async function main() {
   const file = getParam("file");
   const titleEl = document.getElementById("title");
-  const metaEl = document.getElementById("meta");
-  const downloadEl = document.getElementById("download");
 
   if (!file) {
     titleEl.textContent = "Missing file parameter";
-    metaEl.textContent = "Open from the categories page.";
-    downloadEl.style.display = "none";
+    document.getElementById("out").innerHTML = "<p>Open from the categories page.</p>";
     return;
   }
 
   titleEl.textContent = titleFromFilename(file);
-  metaEl.innerHTML = `Source: <code>csv/${file}</code>`;
-  downloadEl.href = `csv/${file}`;
 
   let rows = [];
   try {
