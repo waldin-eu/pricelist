@@ -2,7 +2,7 @@
   const year = new Date().getFullYear();
   const copyrightEl = document.createElement("div");
   copyrightEl.className = "site-copyright";
-  copyrightEl.textContent = `© ${year} Price List. All rights reserved.`;
+  copyrightEl.textContent = `© ${year} Waldin Baby Collection. All rights reserved.`;
 
   const versionEl = document.createElement("div");
   versionEl.className = "site-version";
