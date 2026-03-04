@@ -417,3 +417,26 @@ body.category-page {
     max-width: 100%;
   }
 }
+
+.site-copyright {
+  position: fixed;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: rgba(57, 54, 53, 0.72);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.site-version {
+  position: fixed;
+  right: 8px;
+  bottom: 6px;
+  font-size: 9px;
+  color: rgba(57, 54, 53, 0.52);
+  letter-spacing: 0.03em;
+  pointer-events: none;
+  z-index: 20;
+}
