@@ -37,6 +37,14 @@ function formatSkuLabel(sku) {
   return raw.toUpperCase();
 }
 
+function setPhotoPreview(dataUrl, label) {
+  const preview = document.getElementById("fPhotoPreview");
+  const src = String(dataUrl || "").trim();
+  preview.src = src;
+  preview.dataset.label = String(label || "").trim();
+  preview.style.display = src ? "block" : "none";
+}
+
 function escapeHtml(v) {
   return String(v)
     .replace(/&/g, "&amp;")
@@ -309,10 +317,7 @@ function setForm(item) {
   document.getElementById("fShipmentDimensions").value = item?.shipmentDimensions || "";
   document.getElementById("fBruttoPrice").value = formatTwoDecimals(item?.bruttoPrice || "");
   document.getElementById("fPhotoFile").value = "";
-  const preview = document.getElementById("fPhotoPreview");
-  preview.src = item?.photoDataUrl || "";
-  preview.dataset.label = item?.photoLabel || "";
-  preview.style.display = item?.photoDataUrl ? "block" : "none";
+  setPhotoPreview(item?.photoDataUrl || "", item?.photoLabel || "");
   document.getElementById("modalTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
 }
 
@@ -438,21 +443,26 @@ function bindAppEvents() {
   document.getElementById("restoreBtn").addEventListener("click", restoreCurrent);
   document.getElementById("deleteOverrideBtn").addEventListener("click", deleteCurrentOverride);
   document.getElementById("removePhotoBtn").addEventListener("click", () => {
-    const preview = document.getElementById("fPhotoPreview");
-    preview.removeAttribute("src");
-    preview.dataset.label = "";
-    preview.style.display = "none";
+    setPhotoPreview("", "");
+    document.getElementById("fPhotoFile").value = "";
   });
   document.getElementById("fPhotoFile").addEventListener("change", (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
+    if (!String(file.type || "").startsWith("image/")) {
+      alert("Please choose an image file.");
+      e.target.value = "";
+      return;
+    }
     const label = formatSkuLabel(formValue("fSku"));
     const reader = new FileReader();
     reader.onload = () => {
-      const preview = document.getElementById("fPhotoPreview");
-      preview.src = String(reader.result || "");
-      preview.dataset.label = label;
-      preview.style.display = preview.src ? "block" : "none";
+      setPhotoPreview(String(reader.result || ""), label);
+      e.target.value = "";
+    };
+    reader.onerror = () => {
+      alert("Could not read the selected image.");
+      e.target.value = "";
     };
     reader.readAsDataURL(file);
   });
