@@ -21,6 +21,21 @@ function normalizeHeaderName(v) {
   return normalizeToken(v).replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
+function stemFromFileName(name) {
+  return String(name || "").replace(/\.[^.]+$/, "");
+}
+
+function stemBeforeSuffix(stem) {
+  const m = String(stem || "").match(/^(.*?)(?:[_-][^_-]+)$/);
+  return m ? m[1] : "";
+}
+
+function photoLabelFromFileName(fileName) {
+  const stem = stemFromFileName(fileName);
+  const base = stemBeforeSuffix(stem) || stem;
+  return base.replace(/[_-]+/g, " ").trim();
+}
+
 function escapeHtml(v) {
   return String(v)
     .replace(/&/g, "&amp;")
@@ -202,6 +217,7 @@ function combineCatalog(baseItems) {
       shipmentDimensions: (override.shipmentDimensions && String(override.shipmentDimensions).trim()) || (existing ? existing.shipmentDimensions : ""),
       bruttoPrice: (override.bruttoPrice && String(override.bruttoPrice).trim()) || (existing ? existing.bruttoPrice : ""),
       photoDataUrl: (override.photoDataUrl && String(override.photoDataUrl).trim()) || (existing ? existing.photoDataUrl : ""),
+      photoLabel: (override.photoLabel && String(override.photoLabel).trim()) || (existing ? existing.photoLabel : ""),
       source: existing ? "base+override" : "custom",
       hidden: Boolean(override.hidden)
     });
@@ -294,6 +310,7 @@ function setForm(item) {
   document.getElementById("fPhotoFile").value = "";
   const preview = document.getElementById("fPhotoPreview");
   preview.src = item?.photoDataUrl || "";
+  preview.dataset.label = item?.photoLabel || "";
   preview.style.display = item?.photoDataUrl ? "block" : "none";
   document.getElementById("modalTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
 }
@@ -341,6 +358,7 @@ function saveCurrent() {
     shipmentDimensions: formValue("fShipmentDimensions"),
     bruttoPrice: formatTwoDecimals(formValue("fBruttoPrice")),
     photoDataUrl: document.getElementById("fPhotoPreview").src || "",
+    photoLabel: document.getElementById("fPhotoPreview").dataset.label || "",
     hidden: false
   });
   rebuildCatalog();
@@ -421,15 +439,18 @@ function bindAppEvents() {
   document.getElementById("removePhotoBtn").addEventListener("click", () => {
     const preview = document.getElementById("fPhotoPreview");
     preview.removeAttribute("src");
+    preview.dataset.label = "";
     preview.style.display = "none";
   });
   document.getElementById("fPhotoFile").addEventListener("change", (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
+    const label = photoLabelFromFileName(file.name);
     const reader = new FileReader();
     reader.onload = () => {
       const preview = document.getElementById("fPhotoPreview");
       preview.src = String(reader.result || "");
+      preview.dataset.label = label;
       preview.style.display = preview.src ? "block" : "none";
     };
     reader.readAsDataURL(file);

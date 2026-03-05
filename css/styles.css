@@ -470,6 +470,81 @@ body.category-page {
   object-fit: cover;
 }
 
+.photo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.photo-link {
+  display: inline-block;
+}
+
+.photo-label {
+  font-size: 10px;
+  line-height: 1.2;
+  color: #6a615b;
+  max-width: 110px;
+  word-break: break-word;
+}
+
+.photo-lightbox[hidden] {
+  display: none;
+}
+
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+}
+
+.photo-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 17, 16, 0.72);
+}
+
+.photo-lightbox-figure {
+  position: relative;
+  margin: 24px auto;
+  width: min(94vw, 980px);
+  max-height: calc(100vh - 48px);
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photo-lightbox-img {
+  width: 100%;
+  max-height: calc(100vh - 130px);
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f6f1ed;
+}
+
+.photo-lightbox-caption {
+  font-size: 13px;
+  color: #3f3028;
+}
+
+.photo-lightbox-close {
+  align-self: flex-end;
+  border: 1px solid #d4c5ba;
+  border-radius: 8px;
+  background: #f6f1ed;
+  color: #3f3028;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+body.photo-lightbox-open {
+  overflow: hidden;
+}
+
 @media (max-width: 768px) {
   .category-panel {
     padding: 16px;

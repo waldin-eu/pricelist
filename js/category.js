@@ -133,8 +133,9 @@ function loadAdminPhotoIndex() {
     Object.entries(overrides).forEach(([sku, entry]) => {
       const key = normalizeToken(sku);
       const photo = entry && typeof entry.photoDataUrl === "string" ? entry.photoDataUrl.trim() : "";
+      const label = entry && typeof entry.photoLabel === "string" ? entry.photoLabel.trim() : "";
       if (!key || !photo) return;
-      index.set(key, photo);
+      index.set(key, { url: photo, label: label || key.toUpperCase() });
     });
     return index;
   } catch (_) {
@@ -187,16 +188,30 @@ async function loadPhotoIndex() {
       const stem = stemFromFileName(fileName);
       const fullStem = normalizeToken(stem);
       const baseStem = normalizeToken(stemBeforeSuffix(stem));
+      const fullLabel = (stemBeforeSuffix(stem) || stem).replace(/[_-]+/g, " ").trim();
       const publicPath = `photos/${path}`;
 
-      if (fullStem && !index.has(fullStem)) index.set(fullStem, publicPath);
-      if (baseStem && !index.has(baseStem)) index.set(baseStem, publicPath);
+      if (fullStem && !index.has(fullStem)) index.set(fullStem, { url: publicPath, label: fullLabel });
+      if (baseStem && !index.has(baseStem)) index.set(baseStem, { url: publicPath, label: fullLabel });
     });
 
     return index;
   } catch (_) {
     return new Map();
   }
+}
+
+function renderPhotoCell(photo) {
+  if (!photo || !photo.url) return "";
+  const label = (photo.label || "").trim();
+  return `
+    <div class="photo-wrap">
+      <a href="#" class="photo-link" data-photo-url="${escapeHtml(photo.url)}" data-photo-label="${escapeHtml(label)}">
+        <img class="img" src="${escapeHtml(photo.url)}" alt="${escapeHtml(label)}">
+      </a>
+      ${label ? `<div class="photo-label">${escapeHtml(label)}</div>` : ""}
+    </div>
+  `;
 }
 
 function findSkuKey(keys) {
@@ -625,10 +640,10 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
 
   const hasPhotoColumn = filtered.some((r) => {
     const sku = firstNonEmptyValue(r, skuCandidates);
-    const adminPhoto = sku ? adminPhotoIndex.get(sku) : "";
-    const localPhoto = sku ? photoIndex.get(sku) : "";
-    if (adminPhoto) return true;
-    if (localPhoto) return true;
+    const adminPhoto = sku ? adminPhotoIndex.get(sku) : null;
+    const localPhoto = sku ? photoIndex.get(sku) : null;
+    if (adminPhoto?.url) return true;
+    if (localPhoto?.url) return true;
     if (imageKey && isProbablyImageUrl(r[imageKey])) return true;
     return false;
   });
@@ -648,11 +663,11 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
         <tr>
           ${hasPhotoColumn ? `<td>${(() => {
             const sku = firstNonEmptyValue(r, skuCandidates);
-            const adminPhoto = sku ? adminPhotoIndex.get(sku) : "";
-            const localPhoto = sku ? photoIndex.get(sku) : "";
-            if (adminPhoto) return `<img class="img" src="${adminPhoto}" alt="">`;
-            if (localPhoto) return `<img class="img" src="${localPhoto}" alt="">`;
-            if (imageKey && isProbablyImageUrl(r[imageKey])) return `<img class="img" src="${r[imageKey]}" alt="">`;
+            const adminPhoto = sku ? adminPhotoIndex.get(sku) : null;
+            const localPhoto = sku ? photoIndex.get(sku) : null;
+            if (adminPhoto?.url) return renderPhotoCell(adminPhoto);
+            if (localPhoto?.url) return renderPhotoCell(localPhoto);
+            if (imageKey && isProbablyImageUrl(r[imageKey])) return renderPhotoCell({ url: r[imageKey], label: "" });
             return "";
           })()}</td>` : ""}
           ${displayKeys.map((k) => renderCell(k, r[k], ui, lang)).join("")}
@@ -669,6 +684,14 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
     <p class="muted">${escapeHtml(showing)}</p>
     <div class="table-scroll">
       <table>${head}${body}</table>
+    </div>
+    <div id="photoLightbox" class="photo-lightbox" hidden>
+      <div class="photo-lightbox-backdrop" data-close-photo="1"></div>
+      <figure class="photo-lightbox-figure">
+        <button type="button" class="photo-lightbox-close" data-close-photo="1" aria-label="Close">✕</button>
+        <img id="photoLightboxImg" class="photo-lightbox-img" alt="">
+        <figcaption id="photoLightboxCaption" class="photo-lightbox-caption"></figcaption>
+      </figure>
     </div>
   `;
 }
@@ -719,6 +742,31 @@ async function main() {
   }
 
   outEl.addEventListener("click", (e) => {
+    const photoLink = e.target.closest(".photo-link");
+    if (photoLink) {
+      e.preventDefault();
+      const lightbox = document.getElementById("photoLightbox");
+      const img = document.getElementById("photoLightboxImg");
+      const caption = document.getElementById("photoLightboxCaption");
+      if (lightbox && img && caption) {
+        img.src = photoLink.dataset.photoUrl || "";
+        const label = photoLink.dataset.photoLabel || "";
+        img.alt = label;
+        caption.textContent = label;
+        lightbox.hidden = false;
+        document.body.classList.add("photo-lightbox-open");
+      }
+      return;
+    }
+
+    const closePhoto = e.target.closest("[data-close-photo='1']");
+    if (closePhoto) {
+      const lightbox = document.getElementById("photoLightbox");
+      if (lightbox) lightbox.hidden = true;
+      document.body.classList.remove("photo-lightbox-open");
+      return;
+    }
+
     const btn = e.target.closest(".desc-toggle");
     if (!btn) return;
     const wrap = btn.closest(".desc-wrap");
