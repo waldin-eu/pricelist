@@ -353,6 +353,8 @@ function applyAdminOverrides(data, file) {
   const descriptionKey = findDescriptionKey(keys) || findDescriptionKey(rowKeys);
   const colorKey = findColorKey(keys) || findColorKey(rowKeys);
   const materialKey = findMaterialKey(keys) || findMaterialKey(rowKeys);
+  const productDimensionsKey = findKeyByHeaderIncludes(rowKeys, ["product dimensions and weight"]);
+  const shipmentDimensionsKey = findKeyByHeaderIncludes(rowKeys, ["dimensions and weight of the shipment"]);
   const bruttoKey = findBruttoPriceKey(keys) || findBruttoPriceKey(rowKeys);
 
   const nextRows = [];
@@ -379,6 +381,8 @@ function applyAdminOverrides(data, file) {
     if (descriptionKey && ov.description && String(ov.description).trim()) patched[descriptionKey] = String(ov.description).trim();
     if (colorKey && ov.color && String(ov.color).trim()) patched[colorKey] = String(ov.color).trim();
     if (materialKey && ov.material && String(ov.material).trim()) patched[materialKey] = String(ov.material).trim();
+    if (productDimensionsKey && ov.productDimensions && String(ov.productDimensions).trim()) patched[productDimensionsKey] = String(ov.productDimensions).trim();
+    if (shipmentDimensionsKey && ov.shipmentDimensions && String(ov.shipmentDimensions).trim()) patched[shipmentDimensionsKey] = String(ov.shipmentDimensions).trim();
     if (bruttoKey && ov.bruttoPrice && String(ov.bruttoPrice).trim()) patched[bruttoKey] = String(ov.bruttoPrice).trim();
 
     seen.add(sku);
@@ -398,6 +402,8 @@ function applyAdminOverrides(data, file) {
     if (descriptionKey) row[descriptionKey] = ov.description && String(ov.description).trim() ? String(ov.description).trim() : "";
     if (colorKey) row[colorKey] = ov.color && String(ov.color).trim() ? String(ov.color).trim() : "";
     if (materialKey) row[materialKey] = ov.material && String(ov.material).trim() ? String(ov.material).trim() : "";
+    if (productDimensionsKey) row[productDimensionsKey] = ov.productDimensions && String(ov.productDimensions).trim() ? String(ov.productDimensions).trim() : "";
+    if (shipmentDimensionsKey) row[shipmentDimensionsKey] = ov.shipmentDimensions && String(ov.shipmentDimensions).trim() ? String(ov.shipmentDimensions).trim() : "";
     if (bruttoKey) row[bruttoKey] = ov.bruttoPrice && String(ov.bruttoPrice).trim() ? String(ov.bruttoPrice).trim() : "";
     nextRows.push(row);
   });

@@ -81,6 +81,15 @@ function findColumnIndex(headers, matcher) {
   return -1;
 }
 
+function readCompositeCell(row, headers, idx) {
+  if (idx < 0) return "";
+  const left = String(row[idx] || "").trim();
+  const nextHeader = idx + 1 < headers.length ? String(headers[idx + 1] || "").trim() : "";
+  const right = !nextHeader && idx + 1 < row.length ? String(row[idx + 1] || "").trim() : "";
+  if (left && right) return `${left}, ${right}`;
+  return left || right || "";
+}
+
 async function loadCsvCatalog(file) {
   const res = await fetch(`csv/${file}`, { cache: "no-store" });
   if (!res.ok) return [];
@@ -98,6 +107,8 @@ async function loadCsvCatalog(file) {
         const eanIdx = findColumnIndex(headers, (name) => name.includes("ean"));
         const nameIdx = findColumnIndex(headers, (name) => name.includes("product name"));
         const bruttoIdx = findColumnIndex(headers, (name) => name.includes("brutto price"));
+        const productDimensionsIdx = findColumnIndex(headers, (name) => name.includes("product dimensions and weight"));
+        const shipmentDimensionsIdx = findColumnIndex(headers, (name) => name.includes("dimensions and weight of the shipment"));
         const items = allRows.slice(1).map((cells) => {
           const row = Array.isArray(cells) ? cells : [];
           const sku = String(row[skuIdx] || "").trim();
@@ -107,6 +118,8 @@ async function loadCsvCatalog(file) {
             ean: eanIdx >= 0 ? String(row[eanIdx] || "").trim() : "",
             name: nameIdx >= 0 ? String(row[nameIdx] || "").trim() : "",
             bruttoPrice: bruttoIdx >= 0 ? String(row[bruttoIdx] || "").trim() : "",
+            productDimensions: readCompositeCell(row, headers, productDimensionsIdx),
+            shipmentDimensions: readCompositeCell(row, headers, shipmentDimensionsIdx),
             categoryFile: file
           };
         }).filter(Boolean);
@@ -155,6 +168,8 @@ function combineCatalog(baseItems) {
       description: (trans.description && String(trans.description).trim()) || "",
       color: (trans.color && String(trans.color).trim()) || "",
       material: (trans.material && String(trans.material).trim()) || "",
+      productDimensions: item.productDimensions || "",
+      shipmentDimensions: item.shipmentDimensions || "",
       bruttoPrice: item.bruttoPrice || "",
       source: "base",
       hidden: false
@@ -173,6 +188,8 @@ function combineCatalog(baseItems) {
       description: (override.description && String(override.description).trim()) || (existing ? existing.description : ""),
       color: (override.color && String(override.color).trim()) || (existing ? existing.color : ""),
       material: (override.material && String(override.material).trim()) || (existing ? existing.material : ""),
+      productDimensions: (override.productDimensions && String(override.productDimensions).trim()) || (existing ? existing.productDimensions : ""),
+      shipmentDimensions: (override.shipmentDimensions && String(override.shipmentDimensions).trim()) || (existing ? existing.shipmentDimensions : ""),
       bruttoPrice: (override.bruttoPrice && String(override.bruttoPrice).trim()) || (existing ? existing.bruttoPrice : ""),
       source: existing ? "base+override" : "custom",
       hidden: Boolean(override.hidden)
@@ -259,6 +276,8 @@ function setForm(item) {
   document.getElementById("fDescription").value = item?.description || "";
   document.getElementById("fColor").value = item?.color || "";
   document.getElementById("fMaterial").value = item?.material || "";
+  document.getElementById("fProductDimensions").value = item?.productDimensions || "";
+  document.getElementById("fShipmentDimensions").value = item?.shipmentDimensions || "";
   document.getElementById("fBruttoPrice").value = item?.bruttoPrice || "";
   document.getElementById("modalTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
 }
@@ -302,6 +321,8 @@ function saveCurrent() {
     description: formValue("fDescription"),
     color: formValue("fColor"),
     material: formValue("fMaterial"),
+    productDimensions: formValue("fProductDimensions"),
+    shipmentDimensions: formValue("fShipmentDimensions"),
     bruttoPrice: formValue("fBruttoPrice"),
     hidden: false
   });
