@@ -123,20 +123,61 @@ function loadAdminOverrideIndex() {
   }
 }
 
-function loadAdminPhotoIndex() {
+const PHOTO_DB_NAME = "pricelistPhotos";
+const PHOTO_STORE_NAME = "photos";
+
+function openPhotoDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(PHOTO_DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(PHOTO_STORE_NAME)) {
+        db.createObjectStore(PHOTO_STORE_NAME);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function getPhotoBlob(key) {
+  const db = await openPhotoDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(PHOTO_STORE_NAME, "readonly");
+    const req = tx.objectStore(PHOTO_STORE_NAME).get(key);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function loadAdminPhotoIndex() {
   try {
     const raw = localStorage.getItem("pricelist.admin.v1");
     if (!raw) return new Map();
     const parsed = JSON.parse(raw);
     const overrides = parsed && typeof parsed.overrides === "object" ? parsed.overrides : {};
     const index = new Map();
-    Object.entries(overrides).forEach(([sku, entry]) => {
+    const tasks = Object.entries(overrides).map(async ([sku, entry]) => {
       const key = normalizeToken(sku);
+      if (!key) return;
       const photo = entry && typeof entry.photoDataUrl === "string" ? entry.photoDataUrl.trim() : "";
+      const photoKey = entry && typeof entry.photoKey === "string" ? entry.photoKey.trim() : "";
       const label = entry && typeof entry.photoLabel === "string" ? entry.photoLabel.trim() : "";
-      if (!key || !photo) return;
-      index.set(key, { url: photo, label: label || key.toUpperCase() });
+      if (photo) {
+        index.set(key, { url: photo, label: label || key.toUpperCase() });
+        return;
+      }
+      if (!photoKey) return;
+      try {
+        const blob = await getPhotoBlob(photoKey);
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        index.set(key, { url, label: label || key.toUpperCase() });
+      } catch (_) {
+        // ignore photo loading errors
+      }
     });
+    await Promise.all(tasks);
     return index;
   } catch (_) {
     return new Map();
@@ -735,13 +776,13 @@ async function main() {
   let menuLabels = {};
 
   try {
-    [{ rows, keys }, photoIndex, translationIndex, menuLabels] = await Promise.all([
+    [{ rows, keys }, photoIndex, translationIndex, menuLabels, adminPhotoIndex] = await Promise.all([
       loadCsv(file),
       loadPhotoIndex(),
       loadTranslations(currentLang),
-      loadMenuTranslations(currentLang)
+      loadMenuTranslations(currentLang),
+      loadAdminPhotoIndex()
     ]);
-    adminPhotoIndex = loadAdminPhotoIndex();
   } catch (e) {
     outEl.innerHTML = `<p>${escapeHtml(e.message)}</p>`;
     return;
@@ -791,7 +832,6 @@ async function main() {
 
     const translatedRows = applyTranslations(rows, keys, translationIndex);
     const rowsWithAdminOverrides = applyAdminOverrides({ rows: translatedRows, keys }, file);
-    adminPhotoIndex = loadAdminPhotoIndex();
     renderTable(rowsWithAdminOverrides, input.value, photoIndex, adminPhotoIndex, currentLang);
   };
 

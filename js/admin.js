@@ -10,8 +10,15 @@ const state = {
   store: { overrides: {} },
   search: "",
   categoryFilter: "",
-  selectedSku: ""
+  selectedSku: "",
+  pendingPhotoBlob: null,
+  pendingPhotoChanged: false,
+  pendingPhotoRemoved: false,
+  previewObjectUrl: ""
 };
+
+const PHOTO_DB_NAME = "pricelistPhotos";
+const PHOTO_STORE_NAME = "photos";
 
 function normalizeToken(v) {
   return String(v || "").trim().toLowerCase();
@@ -40,9 +47,14 @@ function formatSkuLabel(sku) {
 function setPhotoPreview(dataUrl, label) {
   const preview = document.getElementById("fPhotoPreview");
   const src = String(dataUrl || "").trim();
+  if (state.previewObjectUrl && state.previewObjectUrl.startsWith("blob:")) {
+    URL.revokeObjectURL(state.previewObjectUrl);
+    state.previewObjectUrl = "";
+  }
   preview.src = src;
   preview.dataset.label = String(label || "").trim();
   preview.style.display = src ? "block" : "none";
+  if (src.startsWith("blob:")) state.previewObjectUrl = src;
 }
 
 function escapeHtml(v) {
@@ -52,6 +64,50 @@ function escapeHtml(v) {
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function openPhotoDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(PHOTO_DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(PHOTO_STORE_NAME)) {
+        db.createObjectStore(PHOTO_STORE_NAME);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function putPhotoBlob(key, blob) {
+  const db = await openPhotoDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(PHOTO_STORE_NAME, "readwrite");
+    tx.objectStore(PHOTO_STORE_NAME).put(blob, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function getPhotoBlob(key) {
+  const db = await openPhotoDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(PHOTO_STORE_NAME, "readonly");
+    const req = tx.objectStore(PHOTO_STORE_NAME).get(key);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function deletePhotoBlob(key) {
+  const db = await openPhotoDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(PHOTO_STORE_NAME, "readwrite");
+    tx.objectStore(PHOTO_STORE_NAME).delete(key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
 }
 
 function formatTwoDecimals(value) {
@@ -77,6 +133,12 @@ function readStore() {
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return { overrides: {} };
     if (!parsed.overrides || typeof parsed.overrides !== "object") parsed.overrides = {};
+    Object.values(parsed.overrides).forEach((entry) => {
+      if (!entry || typeof entry !== "object") return;
+      if (typeof entry.photoDataUrl === "string" && entry.photoDataUrl.length) {
+        entry.photoDataUrl = "";
+      }
+    });
     return parsed;
   } catch (_) {
     return { overrides: {} };
@@ -84,6 +146,14 @@ function readStore() {
 }
 
 function writeStore(nextStore) {
+  if (nextStore && nextStore.overrides && typeof nextStore.overrides === "object") {
+    Object.values(nextStore.overrides).forEach((entry) => {
+      if (!entry || typeof entry !== "object") return;
+      if (typeof entry.photoDataUrl === "string" && entry.photoDataUrl.length) {
+        entry.photoDataUrl = "";
+      }
+    });
+  }
   state.store = nextStore;
   localStorage.setItem(STORE_KEY, JSON.stringify(nextStore));
 }
@@ -204,6 +274,7 @@ function combineCatalog(baseItems) {
       productDimensions: item.productDimensions || "",
       shipmentDimensions: item.shipmentDimensions || "",
       bruttoPrice: item.bruttoPrice || "",
+      photoKey: "",
       photoDataUrl: "",
       source: "base",
       hidden: false
@@ -225,6 +296,7 @@ function combineCatalog(baseItems) {
       productDimensions: (override.productDimensions && String(override.productDimensions).trim()) || (existing ? existing.productDimensions : ""),
       shipmentDimensions: (override.shipmentDimensions && String(override.shipmentDimensions).trim()) || (existing ? existing.shipmentDimensions : ""),
       bruttoPrice: (override.bruttoPrice && String(override.bruttoPrice).trim()) || (existing ? existing.bruttoPrice : ""),
+      photoKey: (override.photoKey && String(override.photoKey).trim()) || (existing ? existing.photoKey : ""),
       photoDataUrl: (override.photoDataUrl && String(override.photoDataUrl).trim()) || (existing ? existing.photoDataUrl : ""),
       photoLabel: (override.photoLabel && String(override.photoLabel).trim()) || (existing ? existing.photoLabel : ""),
       source: existing ? "base+override" : "custom",
@@ -306,6 +378,9 @@ function renderTable() {
 }
 
 function setForm(item) {
+  state.pendingPhotoBlob = null;
+  state.pendingPhotoChanged = false;
+  state.pendingPhotoRemoved = false;
   document.getElementById("fSku").value = item?.sku || "";
   document.getElementById("fEan").value = item?.ean || "";
   document.getElementById("fCategory").value = item?.categoryFile || "";
@@ -317,7 +392,16 @@ function setForm(item) {
   document.getElementById("fShipmentDimensions").value = item?.shipmentDimensions || "";
   document.getElementById("fBruttoPrice").value = formatTwoDecimals(item?.bruttoPrice || "");
   document.getElementById("fPhotoFile").value = "";
-  setPhotoPreview(item?.photoDataUrl || "", item?.photoLabel || "");
+  setPhotoPreview("", item?.photoLabel || "");
+  if (item?.photoDataUrl) {
+    setPhotoPreview(item.photoDataUrl, item?.photoLabel || "");
+  } else if (item?.photoKey) {
+    getPhotoBlob(item.photoKey).then((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      setPhotoPreview(url, item?.photoLabel || "");
+    }).catch(() => {});
+  }
   document.getElementById("modalTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
 }
 
@@ -344,7 +428,7 @@ function rebuildCatalog() {
   state.catalog = combineCatalog(state.baseItems);
 }
 
-function saveCurrent() {
+async function saveCurrent() {
   const sku = formValue("fSku");
   const ean = formValue("fEan");
   const categoryFile = formValue("fCategory");
@@ -352,6 +436,27 @@ function saveCurrent() {
   if (!ean) return alert("EAN is required.");
   if (!categoryFile) return alert("Category is required.");
   const key = normalizeToken(sku);
+  const existingOverride = getOverride(key) || {};
+  const existingItem = state.catalog.get(key);
+  let photoKey = (existingOverride.photoKey && String(existingOverride.photoKey).trim()) || (existingItem?.photoKey || "");
+  let photoLabel = document.getElementById("fPhotoPreview").dataset.label || "";
+
+  try {
+    if (state.pendingPhotoChanged) {
+      if (state.pendingPhotoRemoved) {
+        if (photoKey) await deletePhotoBlob(photoKey);
+        photoKey = "";
+        photoLabel = "";
+      } else if (state.pendingPhotoBlob) {
+        photoKey = photoKey || `sku:${key}`;
+        await putPhotoBlob(photoKey, state.pendingPhotoBlob);
+      }
+    }
+  } catch (e) {
+    alert(`Could not save photo: ${e && e.message ? e.message : "storage error"}`);
+    return;
+  }
+
   setOverride(key, {
     sku,
     ean,
@@ -363,10 +468,14 @@ function saveCurrent() {
     productDimensions: formValue("fProductDimensions"),
     shipmentDimensions: formValue("fShipmentDimensions"),
     bruttoPrice: formatTwoDecimals(formValue("fBruttoPrice")),
-    photoDataUrl: document.getElementById("fPhotoPreview").src || "",
-    photoLabel: document.getElementById("fPhotoPreview").dataset.label || "",
+    photoKey,
+    photoDataUrl: "",
+    photoLabel,
     hidden: false
   });
+  state.pendingPhotoBlob = null;
+  state.pendingPhotoChanged = false;
+  state.pendingPhotoRemoved = false;
   rebuildCatalog();
   state.selectedSku = key;
   renderTable();
@@ -444,6 +553,9 @@ function bindAppEvents() {
   document.getElementById("deleteOverrideBtn").addEventListener("click", deleteCurrentOverride);
   document.getElementById("removePhotoBtn").addEventListener("click", () => {
     setPhotoPreview("", "");
+    state.pendingPhotoBlob = null;
+    state.pendingPhotoChanged = true;
+    state.pendingPhotoRemoved = true;
     document.getElementById("fPhotoFile").value = "";
   });
   document.getElementById("fPhotoFile").addEventListener("change", (e) => {
@@ -458,6 +570,9 @@ function bindAppEvents() {
     const reader = new FileReader();
     reader.onload = () => {
       setPhotoPreview(String(reader.result || ""), label);
+      state.pendingPhotoBlob = file;
+      state.pendingPhotoChanged = true;
+      state.pendingPhotoRemoved = false;
       e.target.value = "";
     };
     reader.onerror = () => {
