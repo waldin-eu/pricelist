@@ -102,6 +102,24 @@ async function loadMenuTranslations(lang) {
   }
 }
 
+function loadAdminOverrideIndex() {
+  try {
+    const raw = localStorage.getItem("pricelist.admin.v1");
+    if (!raw) return new Map();
+    const parsed = JSON.parse(raw);
+    const overrides = parsed && typeof parsed.overrides === "object" ? parsed.overrides : {};
+    const index = new Map();
+    Object.entries(overrides).forEach(([sku, entry]) => {
+      const key = normalizeToken(sku);
+      if (!key || !entry || typeof entry !== "object") return;
+      index.set(key, entry);
+    });
+    return index;
+  } catch (_) {
+    return new Map();
+  }
+}
+
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`i18n/${lang}.json`, { cache: "no-store" });
@@ -302,6 +320,84 @@ function isHiddenDisplayColumn(key) {
 
 function isBruttoPriceColumn(key) {
   return normalizeHeaderName(key).includes("brutto price");
+}
+
+function findBruttoPriceKey(keys) {
+  return keys.find((k) => isBruttoPriceColumn(k));
+}
+
+function findKeyByHeaderIncludes(keys, terms) {
+  return keys.find((k) => {
+    const name = normalizeHeaderName(k);
+    return terms.some((term) => name.includes(term));
+  });
+}
+
+function applyAdminOverrides(data, file) {
+  const rows = Array.isArray(data?.rows) ? data.rows : [];
+  const keys = Array.isArray(data?.keys) ? data.keys : [];
+  const overrides = loadAdminOverrideIndex();
+  if (!keys.length || !overrides.size) return { rows, keys };
+
+  const rowKeys = collectKeys(rows);
+  const skuKey = findSkuKey(keys) || findSkuKey(rowKeys);
+  const eanKey = findEanKey(keys) || findEanKey(rowKeys);
+  if (!skuKey || !eanKey) return { rows, keys };
+
+  const nameKey = findProductNameKey(keys) || findProductNameKey(rowKeys) || findKeyByHeaderIncludes(rowKeys, ["name"]);
+  const descriptionKey = findDescriptionKey(keys) || findDescriptionKey(rowKeys);
+  const colorKey = findColorKey(keys) || findColorKey(rowKeys);
+  const materialKey = findMaterialKey(keys) || findMaterialKey(rowKeys);
+  const bruttoKey = findBruttoPriceKey(keys) || findBruttoPriceKey(rowKeys);
+
+  const nextRows = [];
+  const seen = new Set();
+
+  rows.forEach((row) => {
+    const sku = normalizeToken(row?.[skuKey]);
+    if (!sku) {
+      nextRows.push(row);
+      return;
+    }
+    const ov = overrides.get(sku);
+    if (ov && ov.hidden) return;
+    if (!ov) {
+      seen.add(sku);
+      nextRows.push(row);
+      return;
+    }
+
+    const patched = { ...row };
+    if (ov.sku && String(ov.sku).trim()) patched[skuKey] = String(ov.sku).trim();
+    if (ov.ean && String(ov.ean).trim()) patched[eanKey] = String(ov.ean).trim();
+    if (nameKey && ov.name && String(ov.name).trim()) patched[nameKey] = String(ov.name).trim();
+    if (descriptionKey && ov.description && String(ov.description).trim()) patched[descriptionKey] = String(ov.description).trim();
+    if (colorKey && ov.color && String(ov.color).trim()) patched[colorKey] = String(ov.color).trim();
+    if (materialKey && ov.material && String(ov.material).trim()) patched[materialKey] = String(ov.material).trim();
+    if (bruttoKey && ov.bruttoPrice && String(ov.bruttoPrice).trim()) patched[bruttoKey] = String(ov.bruttoPrice).trim();
+
+    seen.add(sku);
+    nextRows.push(patched);
+  });
+
+  overrides.forEach((ov, skuNorm) => {
+    if (!ov || ov.hidden) return;
+    if (normalizeToken(ov.categoryFile) !== normalizeToken(file)) return;
+    if (seen.has(skuNorm)) return;
+
+    const row = {};
+    keys.forEach((k) => { row[k] = ""; });
+    row[skuKey] = ov.sku && String(ov.sku).trim() ? String(ov.sku).trim() : skuNorm.toUpperCase();
+    row[eanKey] = ov.ean && String(ov.ean).trim() ? String(ov.ean).trim() : "";
+    if (nameKey) row[nameKey] = ov.name && String(ov.name).trim() ? String(ov.name).trim() : "";
+    if (descriptionKey) row[descriptionKey] = ov.description && String(ov.description).trim() ? String(ov.description).trim() : "";
+    if (colorKey) row[colorKey] = ov.color && String(ov.color).trim() ? String(ov.color).trim() : "";
+    if (materialKey) row[materialKey] = ov.material && String(ov.material).trim() ? String(ov.material).trim() : "";
+    if (bruttoKey) row[bruttoKey] = ov.bruttoPrice && String(ov.bruttoPrice).trim() ? String(ov.bruttoPrice).trim() : "";
+    nextRows.push(row);
+  });
+
+  return { rows: nextRows, keys };
 }
 
 function italianizeText(text) {
@@ -590,7 +686,8 @@ async function main() {
     input.placeholder = ui.searchPlaceholder;
 
     const translatedRows = applyTranslations(rows, keys, translationIndex);
-    renderTable({ rows: translatedRows, keys }, input.value, photoIndex, currentLang);
+    const rowsWithAdminOverrides = applyAdminOverrides({ rows: translatedRows, keys }, file);
+    renderTable(rowsWithAdminOverrides, input.value, photoIndex, currentLang);
   };
 
   render();

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SKU Admin</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="admin-page">
+  <main class="admin-wrap">
+    <section id="loginView" class="admin-panel">
+      <h1>SKU Admin</h1>
+      <p class="muted">Password required.</p>
+      <form id="loginForm" class="admin-login-form">
+        <input id="passwordInput" type="password" placeholder="Enter password" autocomplete="current-password" />
+        <button type="submit">Unlock</button>
+      </form>
+      <p id="loginError" class="admin-error" hidden>Invalid password.</p>
+    </section>
+
+    <section id="appView" class="admin-panel" hidden>
+      <div class="admin-topbar">
+        <h1>SKU Admin</h1>
+        <div class="admin-top-actions">
+          <a class="admin-link" href="index.html">Open menu</a>
+          <button id="logoutBtn" type="button" class="admin-btn-secondary">Lock</button>
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <section class="admin-list">
+          <div class="admin-list-controls">
+            <input id="searchInput" type="text" placeholder="Search SKU, name, category..." />
+            <select id="categoryFilter">
+              <option value="">All categories</option>
+            </select>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>SKU</th>
+                  <th>EAN</th>
+                  <th>Category</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="skuTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="admin-form">
+          <h2 id="formTitle">New SKU</h2>
+          <div class="admin-form-fields">
+            <label>SKU<input id="fSku" type="text" /></label>
+            <label>EAN<input id="fEan" type="text" /></label>
+            <label>Category
+              <select id="fCategory"></select>
+            </label>
+            <label>Name<input id="fName" type="text" /></label>
+            <label>Description<textarea id="fDescription" rows="4"></textarea></label>
+            <label>Color<input id="fColor" type="text" /></label>
+            <label>Material<input id="fMaterial" type="text" /></label>
+            <label>Brutto Price<input id="fBruttoPrice" type="text" /></label>
+          </div>
+          <div class="admin-actions">
+            <button id="newBtn" type="button" class="admin-btn-secondary">New</button>
+            <button id="saveBtn" type="button">Save</button>
+            <button id="removeBtn" type="button" class="admin-btn-danger">Remove SKU</button>
+            <button id="restoreBtn" type="button" class="admin-btn-secondary">Restore SKU</button>
+            <button id="deleteOverrideBtn" type="button" class="admin-btn-secondary">Delete Override</button>
+          </div>
+          <p class="admin-help">Removed SKUs are hidden from category pages. New SKUs need both SKU and EAN to appear.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
