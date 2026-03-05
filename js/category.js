@@ -370,9 +370,19 @@ function formatTwoDecimals(value) {
   return num.toFixed(2);
 }
 
+function formatSkuDisplay(key, value) {
+  const header = normalizeHeaderName(key);
+  const isSkuColumn = header.includes("sku") || header.includes("article number") || header.includes("article no");
+  if (!isSkuColumn) return value;
+  const raw = String(value ?? "").trim();
+  if (!/^\d{3}$/.test(raw)) return value;
+  return `000${raw}`;
+}
+
 function renderCell(key, value, ui, lang) {
   const cls = columnClass(key);
-  let text = translateFieldValue(key, (value ?? "").toString(), lang);
+  const withSkuFormat = formatSkuDisplay(key, value);
+  let text = translateFieldValue(key, (withSkuFormat ?? "").toString(), lang);
   if (isBruttoPriceColumn(key)) text = formatTwoDecimals(text);
 
   if (cls === "col-description") {
