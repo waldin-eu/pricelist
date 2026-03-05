@@ -288,6 +288,63 @@ function isBruttoPriceColumn(key) {
   return normalizeHeaderName(key).includes("brutto price");
 }
 
+function italianizeText(text) {
+  let out = String(text ?? "");
+  const replacements = [
+    [/\\bwhite\\b/gi, "bianco"],
+    [/\\bblack\\b/gi, "nero"],
+    [/\\bgray\\b|\\bgrey\\b/gi, "grigio"],
+    [/\\bbeige\\b/gi, "beige"],
+    [/\\bgreen\\b/gi, "verde"],
+    [/\\bblue\\b/gi, "blu"],
+    [/\\bpink\\b/gi, "rosa"],
+    [/\\bnatural\\b/gi, "naturale"],
+    [/\\bwood\\b/gi, "legno"],
+    [/\\bcotton\\b/gi, "cotone"],
+    [/\\bbamboo\\b/gi, "bambu"],
+    [/\\bmattress\\b/gi, "materasso"],
+    [/\\bsheet\\b/gi, "lenzuolo"],
+    [/\\bpillow\\b/gi, "cuscino"],
+    [/\\bduvet\\b/gi, "piumone"],
+    [/\\bquilt\\b/gi, "trapunta"],
+    [/\\bcover\\b/gi, "copertura"],
+    [/\\bcanopy\\b/gi, "baldacchino"],
+    [/\\bplaypen\\b/gi, "box"],
+    [/\\bmoses basket\\b/gi, "cesta di Mose"],
+    [/\\bdresser\\b/gi, "cassettiera"],
+    [/\\bsleepbag\\b/gi, "sacco nanna"],
+    [/\\bbaby bed\\b/gi, "lettino bebe"],
+    [/\\bwith filling\\b/gi, "con imbottitura"],
+    [/\\bwith\\b/gi, "con"],
+    [/\\band\\b/gi, "e"],
+    [/\\bdimensions\\b/gi, "dimensioni"],
+    [/\\btechnical information\\b|\\btechnical informations\\b/gi, "informazioni tecniche"],
+    [/\\bset contains\\b/gi, "il set contiene"],
+    [/\\bproperties\\b/gi, "caratteristiche"],
+    [/\\bcare instructions\\b/gi, "istruzioni per il lavaggio"],
+    [/\\bmachine washable\\b/gi, "lavabile in lavatrice"],
+    [/\\bfabric\\b/gi, "tessuto"],
+    [/\\bfilling\\b/gi, "imbottitura"],
+    [/\\bhypoallergenic\\b/gi, "ipoallergenico"],
+    [/\\bantibacterial\\b/gi, "antibatterico"],
+    [/\\bantifungal\\b/gi, "antifungino"],
+    [/\\bthermoregulating\\b|\\bthermoregulatory\\b/gi, "termoregolante"]
+  ];
+  replacements.forEach(([pattern, value]) => {
+    out = out.replace(pattern, value);
+  });
+  return out;
+}
+
+function translateFieldValue(key, value, lang) {
+  if (lang !== "it") return value;
+  const name = normalizeHeaderName(key);
+  if (name === "product name" || name === "description" || name === "color" || name === "material") {
+    return italianizeText(value);
+  }
+  return value;
+}
+
 function formatTwoDecimals(value) {
   const raw = String(value ?? "").trim();
   if (!raw) return "";
@@ -297,9 +354,9 @@ function formatTwoDecimals(value) {
   return num.toFixed(2);
 }
 
-function renderCell(key, value, ui) {
+function renderCell(key, value, ui, lang) {
   const cls = columnClass(key);
-  let text = (value ?? "").toString();
+  let text = translateFieldValue(key, (value ?? "").toString(), lang);
   if (isBruttoPriceColumn(key)) text = formatTwoDecimals(text);
 
   if (cls === "col-description") {
@@ -428,7 +485,7 @@ function renderTable(data, query, photoIndex, lang) {
             if (imageKey && isProbablyImageUrl(r[imageKey])) return `<img class="img" src="${r[imageKey]}" alt="">`;
             return "";
           })()}</td>` : ""}
-          ${displayKeys.map((k) => renderCell(k, r[k], ui)).join("")}
+          ${displayKeys.map((k) => renderCell(k, r[k], ui, lang)).join("")}
         </tr>
       `).join("")}
     </tbody>
