@@ -133,12 +133,6 @@ function readStore() {
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return { overrides: {} };
     if (!parsed.overrides || typeof parsed.overrides !== "object") parsed.overrides = {};
-    Object.values(parsed.overrides).forEach((entry) => {
-      if (!entry || typeof entry !== "object") return;
-      if (typeof entry.photoDataUrl === "string" && entry.photoDataUrl.length) {
-        entry.photoDataUrl = "";
-      }
-    });
     return parsed;
   } catch (_) {
     return { overrides: {} };
@@ -146,16 +140,47 @@ function readStore() {
 }
 
 function writeStore(nextStore) {
-  if (nextStore && nextStore.overrides && typeof nextStore.overrides === "object") {
-    Object.values(nextStore.overrides).forEach((entry) => {
-      if (!entry || typeof entry !== "object") return;
-      if (typeof entry.photoDataUrl === "string" && entry.photoDataUrl.length) {
-        entry.photoDataUrl = "";
-      }
-    });
-  }
   state.store = nextStore;
   localStorage.setItem(STORE_KEY, JSON.stringify(nextStore));
+}
+
+function dataUrlToBlob(dataUrl) {
+  const parts = String(dataUrl || "").split(",");
+  if (parts.length < 2) return null;
+  const header = parts[0];
+  const mimeMatch = header.match(/data:(.*?);base64/i);
+  const mime = mimeMatch ? mimeMatch[1] : "application/octet-stream";
+  try {
+    const binary = atob(parts[1]);
+    const len = binary.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i += 1) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+  } catch (_) {
+    return null;
+  }
+}
+
+async function migrateLegacyPhotos() {
+  const overrides = state.store && state.store.overrides ? state.store.overrides : {};
+  let changed = false;
+  const tasks = Object.entries(overrides).map(async ([skuKey, entry]) => {
+    if (!entry || typeof entry !== "object") return;
+    const hasKey = entry.photoKey && String(entry.photoKey).trim();
+    const dataUrl = entry.photoDataUrl && String(entry.photoDataUrl).trim();
+    if (!dataUrl || hasKey) return;
+    const blob = dataUrlToBlob(dataUrl);
+    if (!blob) return;
+    const key = `sku:${normalizeToken(skuKey)}`;
+    await putPhotoBlob(key, blob);
+    entry.photoKey = key;
+    entry.photoDataUrl = "";
+    changed = true;
+  });
+  await Promise.all(tasks);
+  if (changed) {
+    writeStore({ ...state.store, overrides: { ...overrides } });
+  }
 }
 
 function getOverride(sku) {
@@ -615,6 +640,8 @@ async function unlock(password) {
 
 async function startApp() {
   await loadAppData();
+  await migrateLegacyPhotos();
+  rebuildCatalog();
   renderCategoryOptions();
   bindAppEvents();
   renderTable();
