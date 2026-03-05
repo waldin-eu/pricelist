@@ -97,6 +97,7 @@ async function loadCsvCatalog(file) {
         if (skuIdx < 0) return resolve([]);
         const eanIdx = findColumnIndex(headers, (name) => name.includes("ean"));
         const nameIdx = findColumnIndex(headers, (name) => name.includes("product name"));
+        const bruttoIdx = findColumnIndex(headers, (name) => name.includes("brutto price"));
         const items = allRows.slice(1).map((cells) => {
           const row = Array.isArray(cells) ? cells : [];
           const sku = String(row[skuIdx] || "").trim();
@@ -105,6 +106,7 @@ async function loadCsvCatalog(file) {
             sku,
             ean: eanIdx >= 0 ? String(row[eanIdx] || "").trim() : "",
             name: nameIdx >= 0 ? String(row[nameIdx] || "").trim() : "",
+            bruttoPrice: bruttoIdx >= 0 ? String(row[bruttoIdx] || "").trim() : "",
             categoryFile: file
           };
         }).filter(Boolean);
@@ -153,7 +155,7 @@ function combineCatalog(baseItems) {
       description: (trans.description && String(trans.description).trim()) || "",
       color: (trans.color && String(trans.color).trim()) || "",
       material: (trans.material && String(trans.material).trim()) || "",
-      bruttoPrice: "",
+      bruttoPrice: item.bruttoPrice || "",
       source: "base",
       hidden: false
     });
