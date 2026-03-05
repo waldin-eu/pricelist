@@ -178,6 +178,14 @@ function findDescriptionKey(keys) {
   return keys.find((k) => normalizeHeaderName(k).includes("description"));
 }
 
+function findColorKey(keys) {
+  return keys.find((k) => normalizeHeaderName(k) === "color");
+}
+
+function findMaterialKey(keys) {
+  return keys.find((k) => normalizeHeaderName(k) === "material");
+}
+
 function filterKeysByMatch(keys, matcher) {
   return keys.filter((k) => matcher(k));
 }
@@ -250,7 +258,9 @@ function applyTranslations(rows, keys, translationIndex) {
   const skuKey = findSkuKey(keys) || findSkuKey(collectKeys(rows));
   const nameKey = findProductNameKey(keys);
   const descriptionKey = findDescriptionKey(keys);
-  if (!skuKey || (!nameKey && !descriptionKey)) return rows;
+  const colorKey = findColorKey(keys);
+  const materialKey = findMaterialKey(keys);
+  if (!skuKey || (!nameKey && !descriptionKey && !colorKey && !materialKey)) return rows;
 
   return rows.map((row) => {
     const sku = normalizeToken(row?.[skuKey]);
@@ -263,6 +273,12 @@ function applyTranslations(rows, keys, translationIndex) {
     }
     if (descriptionKey && translated.description && String(translated.description).trim()) {
       next[descriptionKey] = String(translated.description).trim();
+    }
+    if (colorKey && translated.color && String(translated.color).trim()) {
+      next[colorKey] = String(translated.color).trim();
+    }
+    if (materialKey && translated.material && String(translated.material).trim()) {
+      next[materialKey] = String(translated.material).trim();
     }
     return next;
   });
