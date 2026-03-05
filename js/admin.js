@@ -5,12 +5,12 @@ const STORE_KEY = "pricelist.admin.v1";
 const state = {
   files: [],
   baseItems: [],
-  catalog: new Map(),
   enTranslations: new Map(),
+  catalog: new Map(),
+  store: { overrides: {} },
   search: "",
   categoryFilter: "",
-  selectedSku: "",
-  store: { overrides: {} }
+  selectedSku: ""
 };
 
 function normalizeToken(v) {
@@ -91,19 +91,12 @@ async function loadCsvCatalog(file) {
       skipEmptyLines: true,
       complete: (results) => {
         const allRows = Array.isArray(results.data) ? results.data : [];
-        if (!allRows.length) {
-          resolve([]);
-          return;
-        }
+        if (!allRows.length) return resolve([]);
         const headers = Array.isArray(allRows[0]) ? allRows[0] : [];
         const skuIdx = findColumnIndex(headers, (name) => name.includes("sku") || name.includes("article number") || name.includes("article no"));
-        if (skuIdx < 0) {
-          resolve([]);
-          return;
-        }
+        if (skuIdx < 0) return resolve([]);
         const eanIdx = findColumnIndex(headers, (name) => name.includes("ean"));
         const nameIdx = findColumnIndex(headers, (name) => name.includes("product name"));
-
         const items = allRows.slice(1).map((cells) => {
           const row = Array.isArray(cells) ? cells : [];
           const sku = String(row[skuIdx] || "").trim();
@@ -135,11 +128,11 @@ async function loadEnTranslations() {
     if (!res.ok) return new Map();
     const data = await res.json();
     const products = data && typeof data.products === "object" ? data.products : {};
-    const idx = new Map();
+    const index = new Map();
     Object.entries(products).forEach(([sku, entry]) => {
-      idx.set(normalizeToken(sku), entry || {});
+      index.set(normalizeToken(sku), entry || {});
     });
-    return idx;
+    return index;
   } catch (_) {
     return new Map();
   }
@@ -147,6 +140,7 @@ async function loadEnTranslations() {
 
 function combineCatalog(baseItems) {
   const map = new Map();
+
   baseItems.forEach((item) => {
     const key = normalizeToken(item.sku);
     if (!key || map.has(key)) return;
@@ -165,23 +159,22 @@ function combineCatalog(baseItems) {
     });
   });
 
-  Object.entries(state.store.overrides).forEach(([key, ov]) => {
-    const skuKey = normalizeToken(key);
-    if (!skuKey || !ov || typeof ov !== "object") return;
-    const existing = map.get(skuKey);
-    const merged = {
-      sku: (ov.sku && String(ov.sku).trim()) || (existing ? existing.sku : skuKey.toUpperCase()),
-      ean: (ov.ean && String(ov.ean).trim()) || (existing ? existing.ean : ""),
-      categoryFile: (ov.categoryFile && String(ov.categoryFile).trim()) || (existing ? existing.categoryFile : ""),
-      name: (ov.name && String(ov.name).trim()) || (existing ? existing.name : ""),
-      description: (ov.description && String(ov.description).trim()) || (existing ? existing.description : ""),
-      color: (ov.color && String(ov.color).trim()) || (existing ? existing.color : ""),
-      material: (ov.material && String(ov.material).trim()) || (existing ? existing.material : ""),
-      bruttoPrice: (ov.bruttoPrice && String(ov.bruttoPrice).trim()) || (existing ? existing.bruttoPrice : ""),
+  Object.entries(state.store.overrides).forEach(([sku, override]) => {
+    const key = normalizeToken(sku);
+    if (!key || !override || typeof override !== "object") return;
+    const existing = map.get(key);
+    map.set(key, {
+      sku: (override.sku && String(override.sku).trim()) || (existing ? existing.sku : key.toUpperCase()),
+      ean: (override.ean && String(override.ean).trim()) || (existing ? existing.ean : ""),
+      categoryFile: (override.categoryFile && String(override.categoryFile).trim()) || (existing ? existing.categoryFile : ""),
+      name: (override.name && String(override.name).trim()) || (existing ? existing.name : ""),
+      description: (override.description && String(override.description).trim()) || (existing ? existing.description : ""),
+      color: (override.color && String(override.color).trim()) || (existing ? existing.color : ""),
+      material: (override.material && String(override.material).trim()) || (existing ? existing.material : ""),
+      bruttoPrice: (override.bruttoPrice && String(override.bruttoPrice).trim()) || (existing ? existing.bruttoPrice : ""),
       source: existing ? "base+override" : "custom",
-      hidden: Boolean(ov.hidden)
-    };
-    map.set(skuKey, merged);
+      hidden: Boolean(override.hidden)
+    });
   });
 
   return map;
@@ -191,35 +184,66 @@ function allItemsSorted() {
   return Array.from(state.catalog.values()).sort((a, b) => a.sku.localeCompare(b.sku, undefined, { sensitivity: "base" }));
 }
 
+function getVisibleItems() {
+  const q = normalizeToken(state.search);
+  const category = normalizeToken(state.categoryFilter);
+  return allItemsSorted().filter((item) => {
+    if (category && normalizeToken(item.categoryFile) !== category) return false;
+    if (!q) return true;
+    return [item.sku, item.ean, item.name, item.categoryFile].some((v) => normalizeToken(v).includes(q));
+  });
+}
+
+function statusLabel(item) {
+  if (item.hidden) return "Removed";
+  if (item.source === "custom") return "Custom";
+  if (item.source === "base+override") return "Overridden";
+  return "Active";
+}
+
+function statusClass(item) {
+  if (item.hidden) return "is-removed";
+  if (item.source === "custom") return "is-custom";
+  if (item.source === "base+override") return "is-overridden";
+  return "is-active";
+}
+
+function updateStats(items) {
+  const total = items.length;
+  const removed = items.filter((x) => x.hidden).length;
+  const custom = items.filter((x) => x.source === "custom").length;
+  const overridden = items.filter((x) => x.source === "base+override").length;
+  document.getElementById("adminStats").innerHTML = `
+    <div class="admin-stat"><span>${total}</span><small>Visible Rows</small></div>
+    <div class="admin-stat"><span>${overridden}</span><small>Overridden</small></div>
+    <div class="admin-stat"><span>${custom}</span><small>Custom</small></div>
+    <div class="admin-stat"><span>${removed}</span><small>Removed</small></div>
+  `;
+}
+
 function renderCategoryOptions() {
-  const options = [`<option value="">Select category</option>`].concat(
-    state.files.map((f) => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`)
-  ).join("");
+  const options = [`<option value="">Select category</option>`]
+    .concat(state.files.map((f) => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`))
+    .join("");
   document.getElementById("fCategory").innerHTML = options;
   document.getElementById("categoryFilter").innerHTML = `<option value="">All categories</option>${state.files.map((f) => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join("")}`;
 }
 
 function renderTable() {
-  const q = normalizeToken(state.search);
-  const categoryFilter = normalizeToken(state.categoryFilter);
-  const rows = allItemsSorted().filter((item) => {
-    if (categoryFilter && normalizeToken(item.categoryFile) !== categoryFilter) return false;
-    if (!q) return true;
-    return [item.sku, item.ean, item.categoryFile, item.name].some((v) => normalizeToken(v).includes(q));
-  });
-
+  const items = getVisibleItems();
+  updateStats(items);
   const tbody = document.getElementById("skuTableBody");
-  tbody.innerHTML = rows.map((item) => {
-    const skuNorm = normalizeToken(item.sku);
-    const selected = state.selectedSku && state.selectedSku === skuNorm;
-    const status = item.hidden ? "Removed" : item.source === "custom" ? "Custom" : item.source === "base+override" ? "Overridden" : "Active";
+  tbody.innerHTML = items.map((item) => {
+    const key = normalizeToken(item.sku);
+    const selected = state.selectedSku === key ? "is-selected" : "";
     return `
-      <tr data-sku="${escapeHtml(skuNorm)}" class="${selected ? "is-selected" : ""}">
+      <tr class="${selected}" data-sku="${escapeHtml(key)}">
         <td>${escapeHtml(item.sku)}</td>
         <td>${escapeHtml(item.ean)}</td>
         <td>${escapeHtml(item.categoryFile)}</td>
         <td>${escapeHtml(item.name)}</td>
-        <td>${escapeHtml(status)}</td>
+        <td><span class="admin-badge ${statusClass(item)}">${escapeHtml(statusLabel(item))}</span></td>
+        <td><button type="button" class="admin-table-edit" data-action="edit" data-sku="${escapeHtml(key)}">Edit</button></td>
       </tr>
     `;
   }).join("");
@@ -234,90 +258,101 @@ function setForm(item) {
   document.getElementById("fColor").value = item?.color || "";
   document.getElementById("fMaterial").value = item?.material || "";
   document.getElementById("fBruttoPrice").value = item?.bruttoPrice || "";
-  document.getElementById("formTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
+  document.getElementById("modalTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
 }
 
-function getFormValue(id) {
+function formValue(id) {
   return String(document.getElementById(id).value || "").trim();
 }
 
-function selectSku(skuNorm) {
+function openEditor(skuNorm = "") {
   state.selectedSku = skuNorm || "";
   const item = skuNorm ? state.catalog.get(skuNorm) : null;
   setForm(item || null);
+  document.getElementById("editorModal").hidden = false;
+  document.body.classList.add("admin-modal-open");
+  document.getElementById("fSku").focus();
   renderTable();
 }
 
+function closeEditor() {
+  document.getElementById("editorModal").hidden = true;
+  document.body.classList.remove("admin-modal-open");
+}
+
+function rebuildCatalog() {
+  state.catalog = combineCatalog(state.baseItems);
+}
+
 function saveCurrent() {
-  const sku = getFormValue("fSku");
-  const ean = getFormValue("fEan");
-  const categoryFile = getFormValue("fCategory");
-  if (!sku) {
-    alert("SKU is required.");
-    return;
-  }
-  if (!ean) {
-    alert("EAN is required.");
-    return;
-  }
-  if (!categoryFile) {
-    alert("Category is required.");
-    return;
-  }
-  const skuNorm = normalizeToken(sku);
-  const payload = {
+  const sku = formValue("fSku");
+  const ean = formValue("fEan");
+  const categoryFile = formValue("fCategory");
+  if (!sku) return alert("SKU is required.");
+  if (!ean) return alert("EAN is required.");
+  if (!categoryFile) return alert("Category is required.");
+  const key = normalizeToken(sku);
+  setOverride(key, {
     sku,
     ean,
     categoryFile,
-    name: getFormValue("fName"),
-    description: getFormValue("fDescription"),
-    color: getFormValue("fColor"),
-    material: getFormValue("fMaterial"),
-    bruttoPrice: getFormValue("fBruttoPrice"),
+    name: formValue("fName"),
+    description: formValue("fDescription"),
+    color: formValue("fColor"),
+    material: formValue("fMaterial"),
+    bruttoPrice: formValue("fBruttoPrice"),
     hidden: false
-  };
-  setOverride(skuNorm, payload);
-  state.catalog = combineCatalog(state.baseItems);
-  selectSku(skuNorm);
+  });
+  rebuildCatalog();
+  state.selectedSku = key;
+  renderTable();
+  closeEditor();
 }
 
 function removeCurrent() {
-  const sku = getFormValue("fSku");
+  const sku = formValue("fSku");
   if (!sku) return;
-  const skuNorm = normalizeToken(sku);
-  const existing = getOverride(skuNorm) || {};
-  setOverride(skuNorm, {
+  const key = normalizeToken(sku);
+  const existing = getOverride(key) || {};
+  const base = state.catalog.get(key);
+  setOverride(key, {
     ...existing,
-    sku: existing.sku || (state.catalog.get(skuNorm)?.sku || sku),
-    ean: existing.ean || (state.catalog.get(skuNorm)?.ean || ""),
-    categoryFile: existing.categoryFile || (state.catalog.get(skuNorm)?.categoryFile || ""),
+    sku: existing.sku || base?.sku || sku,
+    ean: existing.ean || base?.ean || "",
+    categoryFile: existing.categoryFile || base?.categoryFile || "",
     hidden: true
   });
-  state.catalog = combineCatalog(state.baseItems);
-  selectSku(skuNorm);
+  rebuildCatalog();
+  state.selectedSku = key;
+  renderTable();
+  closeEditor();
 }
 
 function restoreCurrent() {
-  const sku = getFormValue("fSku");
+  const sku = formValue("fSku");
   if (!sku) return;
-  const skuNorm = normalizeToken(sku);
-  const existing = getOverride(skuNorm);
+  const key = normalizeToken(sku);
+  const existing = getOverride(key);
   if (!existing) return;
-  setOverride(skuNorm, { ...existing, hidden: false });
-  state.catalog = combineCatalog(state.baseItems);
-  selectSku(skuNorm);
+  setOverride(key, { ...existing, hidden: false });
+  rebuildCatalog();
+  state.selectedSku = key;
+  renderTable();
+  closeEditor();
 }
 
 function deleteCurrentOverride() {
-  const sku = getFormValue("fSku");
+  const sku = formValue("fSku");
   if (!sku) return;
-  const skuNorm = normalizeToken(sku);
-  removeOverride(skuNorm);
-  state.catalog = combineCatalog(state.baseItems);
-  selectSku(skuNorm);
+  const key = normalizeToken(sku);
+  removeOverride(key);
+  rebuildCatalog();
+  state.selectedSku = key;
+  renderTable();
+  closeEditor();
 }
 
-function setupAppEvents() {
+function bindAppEvents() {
   document.getElementById("searchInput").addEventListener("input", (e) => {
     state.search = e.target.value || "";
     renderTable();
@@ -326,20 +361,30 @@ function setupAppEvents() {
     state.categoryFilter = e.target.value || "";
     renderTable();
   });
+
   document.getElementById("skuTableBody").addEventListener("click", (e) => {
-    const tr = e.target.closest("tr[data-sku]");
-    if (!tr) return;
-    selectSku(tr.getAttribute("data-sku") || "");
+    const editBtn = e.target.closest("[data-action='edit']");
+    if (editBtn) {
+      openEditor(editBtn.getAttribute("data-sku") || "");
+      return;
+    }
+    const row = e.target.closest("tr[data-sku]");
+    if (!row) return;
+    openEditor(row.getAttribute("data-sku") || "");
   });
-  document.getElementById("newBtn").addEventListener("click", () => {
-    state.selectedSku = "";
-    setForm(null);
-    renderTable();
-  });
+
+  document.getElementById("newBtn").addEventListener("click", () => openEditor(""));
   document.getElementById("saveBtn").addEventListener("click", saveCurrent);
   document.getElementById("removeBtn").addEventListener("click", removeCurrent);
   document.getElementById("restoreBtn").addEventListener("click", restoreCurrent);
   document.getElementById("deleteOverrideBtn").addEventListener("click", deleteCurrentOverride);
+
+  document.getElementById("modalCloseBtn").addEventListener("click", closeEditor);
+  document.getElementById("modalBackdrop").addEventListener("click", closeEditor);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !document.getElementById("editorModal").hidden) closeEditor();
+  });
+
   document.getElementById("logoutBtn").addEventListener("click", () => {
     sessionStorage.removeItem(AUTH_KEY);
     location.reload();
@@ -350,9 +395,9 @@ async function loadAppData() {
   state.store = readStore();
   state.files = await loadFiles();
   state.enTranslations = await loadEnTranslations();
-  const allPerFile = await Promise.all(state.files.map((f) => loadCsvCatalog(f)));
-  state.baseItems = allPerFile.flat();
-  state.catalog = combineCatalog(state.baseItems);
+  const perFile = await Promise.all(state.files.map((f) => loadCsvCatalog(f)));
+  state.baseItems = perFile.flat();
+  rebuildCatalog();
 }
 
 function showApp() {
@@ -363,6 +408,14 @@ function showApp() {
 async function unlock(password) {
   const hash = await sha256Hex(password);
   return hash === ADMIN_PASSWORD_HASH;
+}
+
+async function startApp() {
+  await loadAppData();
+  renderCategoryOptions();
+  bindAppEvents();
+  renderTable();
+  showApp();
 }
 
 async function init() {
@@ -379,21 +432,11 @@ async function init() {
       return;
     }
     sessionStorage.setItem(AUTH_KEY, "1");
-    await loadAppData();
-    renderCategoryOptions();
-    setupAppEvents();
-    setForm(null);
-    renderTable();
-    showApp();
+    await startApp();
   });
 
   if (sessionStorage.getItem(AUTH_KEY) === "1") {
-    await loadAppData();
-    renderCategoryOptions();
-    setupAppEvents();
-    setForm(null);
-    renderTable();
-    showApp();
+    await startApp();
   }
 }
 
