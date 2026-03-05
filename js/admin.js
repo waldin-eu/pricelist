@@ -30,6 +30,15 @@ function escapeHtml(v) {
     .replace(/'/g, "&#39;");
 }
 
+function formatTwoDecimals(value) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  const normalized = raw.replace(",", ".");
+  const num = Number(normalized);
+  if (!Number.isFinite(num)) return raw;
+  return num.toFixed(2);
+}
+
 function sha256Hex(text) {
   const enc = new TextEncoder().encode(text);
   return crypto.subtle.digest("SHA-256", enc).then((buf) =>
@@ -261,6 +270,7 @@ function renderTable() {
         <td>${escapeHtml(item.ean)}</td>
         <td>${escapeHtml(item.categoryFile)}</td>
         <td>${escapeHtml(item.name)}</td>
+        <td>${escapeHtml(formatTwoDecimals(item.bruttoPrice))}</td>
         <td><span class="admin-badge ${statusClass(item)}">${escapeHtml(statusLabel(item))}</span></td>
         <td><button type="button" class="admin-table-edit" data-action="edit" data-sku="${escapeHtml(key)}">Edit</button></td>
       </tr>
@@ -278,7 +288,7 @@ function setForm(item) {
   document.getElementById("fMaterial").value = item?.material || "";
   document.getElementById("fProductDimensions").value = item?.productDimensions || "";
   document.getElementById("fShipmentDimensions").value = item?.shipmentDimensions || "";
-  document.getElementById("fBruttoPrice").value = item?.bruttoPrice || "";
+  document.getElementById("fBruttoPrice").value = formatTwoDecimals(item?.bruttoPrice || "");
   document.getElementById("modalTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
 }
 
@@ -323,7 +333,7 @@ function saveCurrent() {
     material: formValue("fMaterial"),
     productDimensions: formValue("fProductDimensions"),
     shipmentDimensions: formValue("fShipmentDimensions"),
-    bruttoPrice: formValue("fBruttoPrice"),
+    bruttoPrice: formatTwoDecimals(formValue("fBruttoPrice")),
     hidden: false
   });
   rebuildCatalog();
