@@ -180,6 +180,7 @@ function combineCatalog(baseItems) {
       productDimensions: item.productDimensions || "",
       shipmentDimensions: item.shipmentDimensions || "",
       bruttoPrice: item.bruttoPrice || "",
+      photoDataUrl: "",
       source: "base",
       hidden: false
     });
@@ -200,6 +201,7 @@ function combineCatalog(baseItems) {
       productDimensions: (override.productDimensions && String(override.productDimensions).trim()) || (existing ? existing.productDimensions : ""),
       shipmentDimensions: (override.shipmentDimensions && String(override.shipmentDimensions).trim()) || (existing ? existing.shipmentDimensions : ""),
       bruttoPrice: (override.bruttoPrice && String(override.bruttoPrice).trim()) || (existing ? existing.bruttoPrice : ""),
+      photoDataUrl: (override.photoDataUrl && String(override.photoDataUrl).trim()) || (existing ? existing.photoDataUrl : ""),
       source: existing ? "base+override" : "custom",
       hidden: Boolean(override.hidden)
     });
@@ -289,6 +291,10 @@ function setForm(item) {
   document.getElementById("fProductDimensions").value = item?.productDimensions || "";
   document.getElementById("fShipmentDimensions").value = item?.shipmentDimensions || "";
   document.getElementById("fBruttoPrice").value = formatTwoDecimals(item?.bruttoPrice || "");
+  document.getElementById("fPhotoFile").value = "";
+  const preview = document.getElementById("fPhotoPreview");
+  preview.src = item?.photoDataUrl || "";
+  preview.style.display = item?.photoDataUrl ? "block" : "none";
   document.getElementById("modalTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
 }
 
@@ -334,6 +340,7 @@ function saveCurrent() {
     productDimensions: formValue("fProductDimensions"),
     shipmentDimensions: formValue("fShipmentDimensions"),
     bruttoPrice: formatTwoDecimals(formValue("fBruttoPrice")),
+    photoDataUrl: document.getElementById("fPhotoPreview").src || "",
     hidden: false
   });
   rebuildCatalog();
@@ -411,6 +418,22 @@ function bindAppEvents() {
   document.getElementById("removeBtn").addEventListener("click", removeCurrent);
   document.getElementById("restoreBtn").addEventListener("click", restoreCurrent);
   document.getElementById("deleteOverrideBtn").addEventListener("click", deleteCurrentOverride);
+  document.getElementById("removePhotoBtn").addEventListener("click", () => {
+    const preview = document.getElementById("fPhotoPreview");
+    preview.removeAttribute("src");
+    preview.style.display = "none";
+  });
+  document.getElementById("fPhotoFile").addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const preview = document.getElementById("fPhotoPreview");
+      preview.src = String(reader.result || "");
+      preview.style.display = preview.src ? "block" : "none";
+    };
+    reader.readAsDataURL(file);
+  });
 
   document.getElementById("modalCloseBtn").addEventListener("click", closeEditor);
   document.getElementById("modalBackdrop").addEventListener("click", closeEditor);

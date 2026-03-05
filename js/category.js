@@ -123,6 +123,25 @@ function loadAdminOverrideIndex() {
   }
 }
 
+function loadAdminPhotoIndex() {
+  try {
+    const raw = localStorage.getItem("pricelist.admin.v1");
+    if (!raw) return new Map();
+    const parsed = JSON.parse(raw);
+    const overrides = parsed && typeof parsed.overrides === "object" ? parsed.overrides : {};
+    const index = new Map();
+    Object.entries(overrides).forEach(([sku, entry]) => {
+      const key = normalizeToken(sku);
+      const photo = entry && typeof entry.photoDataUrl === "string" ? entry.photoDataUrl.trim() : "";
+      if (!key || !photo) return;
+      index.set(key, photo);
+    });
+    return index;
+  } catch (_) {
+    return new Map();
+  }
+}
+
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`i18n/${lang}.json`, { cache: "no-store" });
@@ -563,7 +582,7 @@ async function loadCsv(file) {
   });
 }
 
-function renderTable(data, query, photoIndex, lang) {
+function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
   const ui = uiText(lang);
   const out = document.getElementById("out");
   const rows = data?.rows || [];
@@ -606,7 +625,9 @@ function renderTable(data, query, photoIndex, lang) {
 
   const hasPhotoColumn = filtered.some((r) => {
     const sku = firstNonEmptyValue(r, skuCandidates);
+    const adminPhoto = sku ? adminPhotoIndex.get(sku) : "";
     const localPhoto = sku ? photoIndex.get(sku) : "";
+    if (adminPhoto) return true;
     if (localPhoto) return true;
     if (imageKey && isProbablyImageUrl(r[imageKey])) return true;
     return false;
@@ -627,7 +648,9 @@ function renderTable(data, query, photoIndex, lang) {
         <tr>
           ${hasPhotoColumn ? `<td>${(() => {
             const sku = firstNonEmptyValue(r, skuCandidates);
+            const adminPhoto = sku ? adminPhotoIndex.get(sku) : "";
             const localPhoto = sku ? photoIndex.get(sku) : "";
+            if (adminPhoto) return `<img class="img" src="${adminPhoto}" alt="">`;
             if (localPhoto) return `<img class="img" src="${localPhoto}" alt="">`;
             if (imageKey && isProbablyImageUrl(r[imageKey])) return `<img class="img" src="${r[imageKey]}" alt="">`;
             return "";
@@ -678,6 +701,7 @@ async function main() {
   let rows = [];
   let keys = [];
   let photoIndex = new Map();
+  let adminPhotoIndex = new Map();
   let translationIndex = new Map();
   let menuLabels = {};
 
@@ -688,6 +712,7 @@ async function main() {
       loadTranslations(currentLang),
       loadMenuTranslations(currentLang)
     ]);
+    adminPhotoIndex = loadAdminPhotoIndex();
   } catch (e) {
     outEl.innerHTML = `<p>${escapeHtml(e.message)}</p>`;
     return;
@@ -712,7 +737,8 @@ async function main() {
 
     const translatedRows = applyTranslations(rows, keys, translationIndex);
     const rowsWithAdminOverrides = applyAdminOverrides({ rows: translatedRows, keys }, file);
-    renderTable(rowsWithAdminOverrides, input.value, photoIndex, currentLang);
+    adminPhotoIndex = loadAdminPhotoIndex();
+    renderTable(rowsWithAdminOverrides, input.value, photoIndex, adminPhotoIndex, currentLang);
   };
 
   render();

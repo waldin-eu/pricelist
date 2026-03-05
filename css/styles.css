@@ -666,6 +666,21 @@ body.admin-page {
   margin-top: 10px;
 }
 
+.admin-photo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-photo-preview {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e3d7cf;
+  background: #f6f1ed;
+}
+
 @media (max-width: 980px) {
   .admin-grid {
     grid-template-columns: 1fr;
