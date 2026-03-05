@@ -322,6 +322,11 @@ function isBruttoPriceColumn(key) {
   return normalizeHeaderName(key).includes("brutto price");
 }
 
+function isDiscountColumn(key) {
+  const name = normalizeHeaderName(key);
+  return name.includes("discount");
+}
+
 function findBruttoPriceKey(keys) {
   return keys.find((k) => isBruttoPriceColumn(k));
 }
@@ -466,6 +471,16 @@ function formatTwoDecimals(value) {
   return num.toFixed(2);
 }
 
+function formatDiscountPercent(value) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  if (raw.includes("%")) return raw;
+  const normalized = raw.replace(",", ".");
+  const num = Number(normalized);
+  if (!Number.isFinite(num)) return raw;
+  return `${(num * 100).toFixed(0)}%`;
+}
+
 function formatSkuDisplay(key, value) {
   const header = normalizeHeaderName(key);
   const isSkuColumn = header.includes("sku") || header.includes("article number") || header.includes("article no");
@@ -480,6 +495,7 @@ function renderCell(key, value, ui, lang) {
   const withSkuFormat = formatSkuDisplay(key, value);
   let text = translateFieldValue(key, (withSkuFormat ?? "").toString(), lang);
   if (isBruttoPriceColumn(key)) text = formatTwoDecimals(text);
+  if (isDiscountColumn(key)) text = formatDiscountPercent(text);
 
   if (cls === "col-description") {
     const safeText = escapeHtml(text);
