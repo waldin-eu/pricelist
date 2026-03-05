@@ -201,15 +201,21 @@ async function loadPhotoIndex() {
   }
 }
 
-function renderPhotoCell(photo) {
+function formatSkuPhotoLabel(sku) {
+  const raw = String(sku || "").trim();
+  if (!raw) return "";
+  if (/^\d{3}$/.test(raw)) return `000${raw}`;
+  return raw.toUpperCase();
+}
+
+function renderPhotoCell(photo, sku) {
   if (!photo || !photo.url) return "";
-  const label = (photo.label || "").trim();
+  const label = formatSkuPhotoLabel(sku);
   return `
     <div class="photo-wrap">
       <a href="#" class="photo-link" data-photo-url="${escapeHtml(photo.url)}" data-photo-label="${escapeHtml(label)}">
         <img class="img" src="${escapeHtml(photo.url)}" alt="${escapeHtml(label)}">
       </a>
-      ${label ? `<div class="photo-label">${escapeHtml(label)}</div>` : ""}
     </div>
   `;
 }
@@ -665,9 +671,9 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
             const sku = firstNonEmptyValue(r, skuCandidates);
             const adminPhoto = sku ? adminPhotoIndex.get(sku) : null;
             const localPhoto = sku ? photoIndex.get(sku) : null;
-            if (adminPhoto?.url) return renderPhotoCell(adminPhoto);
-            if (localPhoto?.url) return renderPhotoCell(localPhoto);
-            if (imageKey && isProbablyImageUrl(r[imageKey])) return renderPhotoCell({ url: r[imageKey], label: "" });
+            if (adminPhoto?.url) return renderPhotoCell(adminPhoto, sku);
+            if (localPhoto?.url) return renderPhotoCell(localPhoto, sku);
+            if (imageKey && isProbablyImageUrl(r[imageKey])) return renderPhotoCell({ url: r[imageKey], label: "" }, sku);
             return "";
           })()}</td>` : ""}
           ${displayKeys.map((k) => renderCell(k, r[k], ui, lang)).join("")}

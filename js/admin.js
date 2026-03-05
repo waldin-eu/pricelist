@@ -30,10 +30,11 @@ function stemBeforeSuffix(stem) {
   return m ? m[1] : "";
 }
 
-function photoLabelFromFileName(fileName) {
-  const stem = stemFromFileName(fileName);
-  const base = stemBeforeSuffix(stem) || stem;
-  return base.replace(/[_-]+/g, " ").trim();
+function formatSkuLabel(sku) {
+  const raw = String(sku || "").trim();
+  if (!raw) return "";
+  if (/^\d{3}$/.test(raw)) return `000${raw}`;
+  return raw.toUpperCase();
 }
 
 function escapeHtml(v) {
@@ -445,7 +446,7 @@ function bindAppEvents() {
   document.getElementById("fPhotoFile").addEventListener("change", (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
-    const label = photoLabelFromFileName(file.name);
+    const label = formatSkuLabel(formValue("fSku"));
     const reader = new FileReader();
     reader.onload = () => {
       const preview = document.getElementById("fPhotoPreview");
