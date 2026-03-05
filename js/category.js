@@ -67,6 +67,9 @@ function uiText(lang) {
 }
 
 function translateColumnHeader(key, lang) {
+  if (isBruttoPriceColumn(key)) {
+    return lang === "it" ? "Prezzo Lordo (€)" : "Brutto Price (€)";
+  }
   if (lang !== "it") return key;
   const name = normalizeHeaderName(key);
   const map = {
@@ -76,7 +79,7 @@ function translateColumnHeader(key, lang) {
     "product photo": "Foto Prodotto",
     "registered design": "Design Registrato",
     "description": "Descrizione",
-    "brutto price": "Prezzo Lordo",
+    "brutto price": "Prezzo Lordo (€)",
     "dropshipping discount": "Sconto Dropshipping",
     "wholesale discount": "Sconto Ingrosso",
     "wholesale price": "Prezzo Ingrosso",
