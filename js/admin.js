@@ -1,4 +1,4 @@
-const ADMIN_PASSWORD_HASH = "9f4b4978cd073fad33d4068570824dcbc176c9bd36b644014a3e4d50e4815a24"; // waldin-admin
+const ADMIN_PASSWORD_HASH = "3d12527576018e22a61ed07b013616913b6236df96fa03f0f57195429f34afa7"; // Waldin2026!!
 const AUTH_KEY = "pricelist.admin.auth.v1";
 const STORE_KEY = "pricelist.admin.v1";
 
