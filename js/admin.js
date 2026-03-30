@@ -46,6 +46,7 @@ function formatSkuLabel(sku) {
 
 function setPhotoPreview(dataUrl, label) {
   const preview = document.getElementById("fPhotoPreview");
+  const downloadBtn = document.getElementById("downloadPhotoBtn");
   const src = String(dataUrl || "").trim();
   if (state.previewObjectUrl && state.previewObjectUrl.startsWith("blob:")) {
     URL.revokeObjectURL(state.previewObjectUrl);
@@ -54,6 +55,7 @@ function setPhotoPreview(dataUrl, label) {
   preview.src = src;
   preview.dataset.label = String(label || "").trim();
   preview.style.display = src ? "block" : "none";
+  downloadBtn.hidden = !src;
   if (src.startsWith("blob:")) state.previewObjectUrl = src;
 }
 
@@ -554,6 +556,19 @@ function bindAppEvents() {
     state.pendingPhotoChanged = true;
     state.pendingPhotoRemoved = true;
     document.getElementById("fPhotoFile").value = "";
+  });
+  document.getElementById("downloadPhotoBtn").addEventListener("click", () => {
+    const preview = document.getElementById("fPhotoPreview");
+    const sku = formValue("fSku");
+    if (!preview.src || !sku) return alert("No photo or SKU selected.");
+    const filename = `${normalizeToken(sku)}.jpg`;
+    const a = document.createElement("a");
+    a.href = preview.src;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    alert(`Downloaded as "${filename}". Save to photos/sku/ folder and commit to git.`);
   });
   document.getElementById("fPhotoFile").addEventListener("change", (e) => {
     const file = e.target.files && e.target.files[0];
