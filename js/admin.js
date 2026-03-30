@@ -446,6 +446,16 @@ function rebuildCatalog() {
   state.catalog = combineCatalog(state.baseItems);
 }
 
+function fallbackDownload(filename, dataUrl) {
+  const a = document.createElement("a");
+  a.href = dataUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  alert(`Photo saved as "${filename}". Move it to photos/sku/ folder and commit to git.`);
+}
+
 async function saveCurrent() {
   const sku = formValue("fSku");
   const ean = formValue("fEan");
@@ -457,6 +467,39 @@ async function saveCurrent() {
   
   // Photo file path will be: photos/sku/{sku}.jpg (user manages actual files through git)
   let photoPath = state.pendingPhotoChanged ? `photos/sku/${key}.jpg` : "";
+
+  // If there's a pending photo, save it to the local photos/sku/ folder
+  if (state.pendingPhotoBlob && state.pendingPhotoChanged) {
+    const filename = `${key}.jpg`;
+    const preview = document.getElementById("fPhotoPreview");
+    if (preview.src) {
+      // Try to use File System Access API if available (modern browsers)
+      if ('showSaveFilePicker' in window) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: filename,
+            types: [{
+              description: 'JPEG Image',
+              accept: { 'image/jpeg': ['.jpg', '.jpeg'] }
+            }]
+          });
+          const writable = await handle.createWritable();
+          // Convert data URL to blob
+          const response = await fetch(preview.src);
+          const blob = await response.blob();
+          await writable.write(blob);
+          await writable.close();
+          alert(`Photo saved as "${filename}" in your chosen location. Move it to photos/sku/ folder and commit to git.`);
+        } catch (error) {
+          // User cancelled or API not supported, fall back to download
+          fallbackDownload(filename, preview.src);
+        }
+      } else {
+        // Fallback to download for older browsers
+        fallbackDownload(filename, preview.src);
+      }
+    }
+  }
 
   setOverride(key, {
     sku,
@@ -556,19 +599,6 @@ function bindAppEvents() {
     state.pendingPhotoChanged = true;
     state.pendingPhotoRemoved = true;
     document.getElementById("fPhotoFile").value = "";
-  });
-  document.getElementById("downloadPhotoBtn").addEventListener("click", () => {
-    const preview = document.getElementById("fPhotoPreview");
-    const sku = formValue("fSku");
-    if (!preview.src || !sku) return alert("No photo or SKU selected.");
-    const filename = `${normalizeToken(sku)}.jpg`;
-    const a = document.createElement("a");
-    a.href = preview.src;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    alert(`Downloaded as "${filename}". Save to photos/sku/ folder and commit to git.`);
   });
   document.getElementById("fPhotoFile").addEventListener("change", (e) => {
     const file = e.target.files && e.target.files[0];
