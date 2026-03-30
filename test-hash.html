@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hash Test</title>
+</head>
+<body>
+  <h1>SHA-256 Hash Test</h1>
+  <input type="text" id="passwordInput" value="Waldin2026!!" />
+  <button onclick="testHash()">Test Hash</button>
+  <div id="output"></div>
+
+  <script>
+    function sha256Hex(text) {
+      const enc = new TextEncoder().encode(text);
+      return crypto.subtle.digest("SHA-256", enc).then((buf) =>
+        Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("")
+      );
+    }
+
+    async function testHash() {
+      const password = document.getElementById("passwordInput").value;
+      const hash = await sha256Hex(password);
+      document.getElementById("output").innerHTML = `
+        <p><strong>Password:</strong> ${password}</p>
+        <p><strong>Hash:</strong> ${hash}</p>
+        <p><strong>Expected:</strong> 3d12527576018e22a61ed07b013616913b6236df96fa03f0f57195429f34afa7</p>
+        <p><strong>Match:</strong> ${hash === "3d12527576018e22a61ed07b013616913b6236df96fa03f0f57195429f34afa7" ? "✓ YES" : "✗ NO"}</p>
+      `;
+    }
+
+    // Test on load
+    testHash();
+  </script>
+</body>
+</html>

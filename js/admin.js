@@ -635,6 +635,10 @@ function showApp() {
 
 async function unlock(password) {
   const hash = await sha256Hex(password);
+  console.log("Password entered:", password);
+  console.log("Hash generated:", hash);
+  console.log("Expected hash:", ADMIN_PASSWORD_HASH);
+  console.log("Match:", hash === ADMIN_PASSWORD_HASH);
   return hash === ADMIN_PASSWORD_HASH;
 }
 
