@@ -71,7 +71,7 @@ async function main() {
     const calculatorTitle = currentLang === "it" ? "Calcolatore di Prezzi" : "Price Calculator";
     const calculatorCard = `
       <a class="menu-card" href="calculator.html?lang=${encodeURIComponent(currentLang)}">
-        <div class="menu-photo" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px;">🧮</div>
+        <img class="menu-photo" src="graphics/calculator.svg" alt="Calculator" loading="lazy">
         <div class="menu-title">${calculatorTitle}</div>
       </a>
     `;
