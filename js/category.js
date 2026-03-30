@@ -26,6 +26,11 @@ function escapeHtml(v) {
     .replace(/'/g, "&#39;");
 }
 
+function getSkuPhotoPath(sku) {
+  const key = normalizeToken(sku);
+  return `photos/sku/${key}.jpg`;
+}
+
 function titleFromFilename(name) {
   let t = name.replace(/^PriceList_\d{4}_/i, "").replace(/\.csv$/i, "");
   t = t.replace(/_/g, " ").trim();
@@ -163,27 +168,25 @@ async function loadAdminPhotoIndex() {
     const parsed = JSON.parse(raw);
     const overrides = parsed && typeof parsed.overrides === "object" ? parsed.overrides : {};
     const index = new Map();
-    const tasks = Object.entries(overrides).map(async ([sku, entry]) => {
+    
+    Object.entries(overrides).forEach(([sku, entry]) => {
       const key = normalizeToken(sku);
       if (!key) return;
-      const photo = entry && typeof entry.photoDataUrl === "string" ? entry.photoDataUrl.trim() : "";
-      const photoKey = entry && typeof entry.photoKey === "string" ? entry.photoKey.trim() : "";
-      const label = entry && typeof entry.photoLabel === "string" ? entry.photoLabel.trim() : "";
-      if (photo) {
-        index.set(key, { url: photo, label: label || key.toUpperCase() });
+      
+      // Check for new photoPath field (managed via git)
+      const photoPath = entry && typeof entry.photoPath === "string" ? entry.photoPath.trim() : "";
+      if (photoPath) {
+        index.set(key, { url: photoPath, label: key.toUpperCase() });
         return;
       }
-      if (!photoKey) return;
-      try {
-        const blob = await getPhotoBlob(photoKey);
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        index.set(key, { url, label: label || key.toUpperCase() });
-      } catch (_) {
-        // ignore photo loading errors
+      
+      // Legacy: check for photoDataUrl
+      const photo = entry && typeof entry.photoDataUrl === "string" ? entry.photoDataUrl.trim() : "";
+      if (photo) {
+        index.set(key, { url: photo, label: key.toUpperCase() });
       }
     });
-    await Promise.all(tasks);
+    
     return index;
   } catch (_) {
     return new Map();

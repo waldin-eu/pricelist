@@ -292,8 +292,7 @@ function combineCatalog(baseItems) {
       productDimensions: item.productDimensions || "",
       shipmentDimensions: item.shipmentDimensions || "",
       bruttoPrice: item.bruttoPrice || "",
-      photoKey: "",
-      photoDataUrl: "",
+      photoPath: "",
       source: "base",
       hidden: false
     });
@@ -314,9 +313,7 @@ function combineCatalog(baseItems) {
       productDimensions: (override.productDimensions && String(override.productDimensions).trim()) || (existing ? existing.productDimensions : ""),
       shipmentDimensions: (override.shipmentDimensions && String(override.shipmentDimensions).trim()) || (existing ? existing.shipmentDimensions : ""),
       bruttoPrice: (override.bruttoPrice && String(override.bruttoPrice).trim()) || (existing ? existing.bruttoPrice : ""),
-      photoKey: (override.photoKey && String(override.photoKey).trim()) || (existing ? existing.photoKey : ""),
-      photoDataUrl: (override.photoDataUrl && String(override.photoDataUrl).trim()) || (existing ? existing.photoDataUrl : ""),
-      photoLabel: (override.photoLabel && String(override.photoLabel).trim()) || (existing ? existing.photoLabel : ""),
+      photoPath: (override.photoPath && String(override.photoPath).trim()) || (existing ? existing.photoPath : ""),
       source: existing ? "base+override" : "custom",
       hidden: Boolean(override.hidden)
     });
@@ -410,16 +407,17 @@ function setForm(item) {
   document.getElementById("fShipmentDimensions").value = item?.shipmentDimensions || "";
   document.getElementById("fBruttoPrice").value = formatTwoDecimals(item?.bruttoPrice || "");
   document.getElementById("fPhotoFile").value = "";
-  setPhotoPreview("", item?.photoLabel || "");
-  if (item?.photoDataUrl) {
-    setPhotoPreview(item.photoDataUrl, item?.photoLabel || "");
-  } else if (item?.photoKey) {
-    getPhotoBlob(item.photoKey).then((blob) => {
-      if (!blob) return;
-      const url = URL.createObjectURL(blob);
-      setPhotoPreview(url, item?.photoLabel || "");
-    }).catch(() => {});
+  
+  // Show photo path reference or placeholder
+  if (item?.photoPath) {
+    const photoPreview = document.getElementById("fPhotoPreview");
+    photoPreview.src = item.photoPath;
+    photoPreview.dataset.label = item.photoPath;
+    photoPreview.style.display = "block";
+  } else {
+    setPhotoPreview("", "");
   }
+  
   document.getElementById("modalTitle").textContent = item ? `Edit SKU: ${item.sku}` : "New SKU";
 }
 
@@ -454,26 +452,9 @@ async function saveCurrent() {
   if (!ean) return alert("EAN is required.");
   if (!categoryFile) return alert("Category is required.");
   const key = normalizeToken(sku);
-  const existingOverride = getOverride(key) || {};
-  const existingItem = state.catalog.get(key);
-  let photoKey = (existingOverride.photoKey && String(existingOverride.photoKey).trim()) || (existingItem?.photoKey || "");
-  let photoLabel = document.getElementById("fPhotoPreview").dataset.label || "";
-
-  try {
-    if (state.pendingPhotoChanged) {
-      if (state.pendingPhotoRemoved) {
-        if (photoKey) await deletePhotoBlob(photoKey);
-        photoKey = "";
-        photoLabel = "";
-      } else if (state.pendingPhotoBlob) {
-        photoKey = photoKey || `sku:${key}`;
-        await putPhotoBlob(photoKey, state.pendingPhotoBlob);
-      }
-    }
-  } catch (e) {
-    alert(`Could not save photo: ${e && e.message ? e.message : "storage error"}`);
-    return;
-  }
+  
+  // Photo file path will be: photos/sku/{sku}.jpg (user manages actual files through git)
+  let photoPath = state.pendingPhotoChanged ? `photos/sku/${key}.jpg` : "";
 
   setOverride(key, {
     sku,
@@ -486,9 +467,7 @@ async function saveCurrent() {
     productDimensions: formValue("fProductDimensions"),
     shipmentDimensions: formValue("fShipmentDimensions"),
     bruttoPrice: formatTwoDecimals(formValue("fBruttoPrice")),
-    photoKey,
-    photoDataUrl: "",
-    photoLabel,
+    photoPath: photoPath,
     hidden: false
   });
   state.pendingPhotoBlob = null;
