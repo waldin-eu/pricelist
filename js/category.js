@@ -49,7 +49,10 @@ function uiText(lang) {
       noColumns: "Nessuna colonna trovata in questo CSV.",
       noSkuEan: "Nessuna riga con SKU ed EAN.",
       missingFileTitle: "Parametro file mancante",
-      openFromMenu: "Apri dal menu."
+      openFromMenu: "Apri dal menu.",
+      labelVat: "IVA Paese (%)",
+      labelDiscount: "Sconto Concordato (%)",
+      discountPriceColumn: "Prezzo con Sconto (€)"
     };
   }
   return {
@@ -62,7 +65,10 @@ function uiText(lang) {
     noColumns: "No columns found in this CSV.",
     noSkuEan: "No rows with both SKU and EAN.",
     missingFileTitle: "Missing file parameter",
-    openFromMenu: "Open from the menu."
+    openFromMenu: "Open from the menu.",
+    labelVat: "Country VAT (%)",
+    labelDiscount: "Agreed Discount (%)",
+    discountPriceColumn: "Discount Price (€)"
   };
 }
 
@@ -422,41 +428,6 @@ function findKeyByHeaderIncludes(keys, terms) {
   });
 }
 
-/**
- * Find the best discount key (tries dropshipping first, then wholesale)
- */
-function findDiscountKey(keys) {
-  return keys.find((k) => {
-    const name = normalizeHeaderName(k);
-    return name.includes("dropshipping discount");
-  }) || keys.find((k) => {
-    const name = normalizeHeaderName(k);
-    return name.includes("discount");
-  });
-}
-
-/**
- * Parse discount percentage from various formats
- * Formats: "0.2" (decimal), "20%" (percentage), ">20%  <30%" (range)
- */
-function parseDiscountPercent(value) {
-  if (!value) return 0;
-  const str = String(value || "").trim();
-  
-  // Try to extract percentage number (e.g., "20" from "20%" or ">20%  <30%")
-  const match = str.match(/(\d+(?:\.\d+)?)/);
-  if (match) {
-    const num = parseFloat(match[1]);
-    // If it looks like a decimal (between 0 and 1), convert to percentage
-    if (num > 0 && num <= 1) {
-      return num * 100;
-    }
-    // Otherwise assume it's already a percentage
-    return num;
-  }
-  return 0;
-}
-
 function applyAdminOverrides(data, file) {
   const rows = Array.isArray(data?.rows) ? data.rows : [];
   const keys = Array.isArray(data?.keys) ? data.keys : [];
@@ -679,7 +650,7 @@ async function loadCsv(file) {
   });
 }
 
-function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
+function renderTable(data, query, photoIndex, adminPhotoIndex, lang, userVat = 0, userDiscount = 0) {
   const ui = uiText(lang);
   const out = document.getElementById("out");
   const rows = data?.rows || [];
@@ -730,16 +701,18 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
     return false;
   });
 
-  // Find brutto price and discount columns for calculation
+  // Check if we should show discount price column (when user has entered values)
+  const showDiscountPrice = userVat > 0 || userDiscount > 0;
+  
+  // Find brutto price column for discount calculation
   const bruttoKey = findBruttoPriceKey(keys) || findBruttoPriceKey(rowKeys);
-  const discountKey = findDiscountKey(keys) || findDiscountKey(rowKeys);
 
   const head = `
     <thead>
       <tr>
         ${hasPhotoColumn ? `<th>${escapeHtml(ui.photoColumn)}</th>` : ""}
         ${displayKeys.map((k) => `<th class="${columnClass(k)}">${escapeHtml(translateColumnHeader(k, lang))}</th>`).join("")}
-        ${bruttoKey && discountKey ? `<th class="${columnClass("Discount Price")}">${lang === "it" ? "Prezzo con Sconto (€)" : "Discount Price (€)"}</th>` : ""}
+        ${showDiscountPrice && bruttoKey ? `<th class="${columnClass("DiscountPrice")}">${escapeHtml(ui.discountPriceColumn)}</th>` : ""}
       </tr>
     </thead>
   `;
@@ -758,12 +731,11 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
             return "";
           })()}</td>` : ""}
           ${displayKeys.map((k) => renderCell(k, r[k], ui, lang)).join("")}
-          ${bruttoKey && discountKey ? `<td>${(() => {
+          ${showDiscountPrice && bruttoKey ? `<td>${(() => {
             const brutto = parseFloat(String(r[bruttoKey] || "").trim());
-            const discount = parseDiscountPercent(r[discountKey]);
             if (!Number.isFinite(brutto)) return "";
-            const discountPrice = calculateDiscountPrice(brutto, discount);
-            return discountPrice ? `€ ${escapeHtml(discountPrice)}` : "";
+            const discountedPrice = calculateFinalPrice(brutto, userVat, userDiscount);
+            return discountedPrice ? `€ ${escapeHtml(discountedPrice)}` : "";
           })()}</td>` : ""}
         </tr>
       `).join("")}
@@ -797,6 +769,10 @@ async function main() {
   const outEl = document.getElementById("out");
   const backEl = document.getElementById("back-link");
   const input = document.getElementById("q");
+  const vatInput = document.getElementById("categoryVat");
+  const discountInput = document.getElementById("categoryDiscount");
+  const vatLabel = document.getElementById("labelCategoryVat");
+  const discountLabel = document.getElementById("labelCategoryDiscount");
   const langButtons = Array.from(document.querySelectorAll(".lang-flag[data-lang]"));
 
   const setActiveLang = (lang) => {
@@ -876,14 +852,23 @@ async function main() {
     backEl.textContent = backLabel(currentLang);
     backEl.href = `index.html?lang=${encodeURIComponent(currentLang)}`;
     input.placeholder = ui.searchPlaceholder;
+    vatLabel.textContent = ui.labelVat;
+    discountLabel.textContent = ui.labelDiscount;
 
     const translatedRows = applyTranslations(rows, keys, translationIndex);
     const rowsWithAdminOverrides = applyAdminOverrides({ rows: translatedRows, keys }, file);
-    renderTable(rowsWithAdminOverrides, input.value, photoIndex, adminPhotoIndex, currentLang);
+    
+    // Get user inputs
+    const userVat = parseFloat(vatInput.value) || 0;
+    const userDiscount = parseFloat(discountInput.value) || 0;
+    
+    renderTable(rowsWithAdminOverrides, input.value, photoIndex, adminPhotoIndex, currentLang, userVat, userDiscount);
   };
 
   render();
   input.addEventListener("input", render);
+  vatInput.addEventListener("input", render);
+  discountInput.addEventListener("input", render);
 
   langButtons.forEach((btn) => {
     btn.addEventListener("click", async () => {
