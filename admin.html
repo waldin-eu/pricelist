@@ -80,9 +80,11 @@
           <label>Product Dimensions and Weight<textarea id="fProductDimensions" rows="3"></textarea></label>
           <label>Dimensions and Weight of the Shipment<textarea id="fShipmentDimensions" rows="3"></textarea></label>
           <label>Brutto Price (€)<input id="fBruttoPrice" type="text" /></label>
-          <label>Product Photo
+          <label>Product Photo</label>
+          <div class="file-input-wrapper">
             <input id="fPhotoFile" type="file" accept="image/*" />
-          </label>
+            <span class="file-input-label">📁 Choose Photo</span>
+          </div>
           <div class="admin-photo-row">
             <img id="fPhotoPreview" class="admin-photo-preview" alt="" />
             <button id="removePhotoBtn" type="button" class="admin-btn-secondary">Remove Photo</button>
