@@ -68,7 +68,15 @@ async function main() {
   const englishLabels = await loadMenuTranslations("en");
 
   const render = () => {
-    menuEl.innerHTML = files.map(f => {
+    const calculatorTitle = currentLang === "it" ? "Calcolatore di Prezzi" : "Price Calculator";
+    const calculatorCard = `
+      <a class="menu-card" href="calculator.html?lang=${encodeURIComponent(currentLang)}">
+        <div class="menu-photo" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px;">🧮</div>
+        <div class="menu-title">${calculatorTitle}</div>
+      </a>
+    `;
+    
+    const productCards = files.map(f => {
       const title = labels[f] || titleFromFilename(f);
       const imageLabel = englishLabels[f] || titleFromFilename(f);
       const imagePath = menuPhotoPath(imageLabel);
@@ -80,6 +88,8 @@ async function main() {
         </a>
       `;
     }).join("");
+    
+    menuEl.innerHTML = calculatorCard + productCards;
   };
 
   render();

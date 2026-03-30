@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Price Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .calculator-wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .calculator-card {
+      width: min(520px, 100%);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px 22px;
+      backdrop-filter: blur(3px);
+    }
+
+    .calculator-header {
+      margin-bottom: 24px;
+    }
+
+    .calculator-header h1 {
+      margin: 0 0 8px 0;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: .2px;
+    }
+
+    .calculator-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.4;
+      font-size: 14px;
+    }
+
+    .calculator-controls {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .calculator-back {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .calculator-back:hover {
+      background: #f5f0eb;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 8px;
+    }
+
+    .lang-flag {
+      font-size: 18px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .lang-flag:hover {
+      background: #f5f0eb;
+    }
+
+    .lang-flag.is-active {
+      background: #ede6e0;
+    }
+
+    .form {
+      margin-top: 10px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      margin: 0 0 8px 0;
+      color: var(--text);
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 12px;
+      font-size: 15px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+    }
+
+    input:focus {
+      border-color: var(--border);
+      box-shadow: 0 0 0 4px rgba(237,230,224,.55);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .prefix {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 0 4px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 520px) {
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      background: var(--text);
+      color: white;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #f9f7f4;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .result-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      margin: 0 0 6px 0;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .result-value {
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .footer {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .logo-below {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="calculator-wrap">
+    <section class="calculator-card">
+      <div class="calculator-controls">
+        <a class="calculator-back" href="index.html">← Back to menu</a>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" class="lang-flag" data-lang="en" title="English" aria-label="English">🇬🇧</button>
+          <button type="button" class="lang-flag" data-lang="it" title="Italiano" aria-label="Italiano">🇮🇹</button>
+        </div>
+      </div>
+
+      <div class="calculator-header">
+        <h1 id="calcTitle">Price Calculator</h1>
+        <p id="calcSubtitle">Enter brutto price, VAT, and discount to get your final price.</p>
+      </div>
+
+      <form class="form" onsubmit="return false;">
+        <div class="field">
+          <label for="brutto" id="labelBrutto">BRUTTO PRICE</label>
+          <div class="input-row">
+            <span class="prefix" aria-hidden="true">EUR</span>
+            <input type="number" id="brutto" inputmode="decimal" step="0.01" placeholder="e.g. 1200" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="vat" id="labelVat">YOUR COUNTRY VAT (%)</label>
+            <input type="number" id="vat" inputmode="decimal" step="0.01" placeholder="e.g. 23" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="discount" id="labelDiscount">YOUR AGREED DISCOUNT (%)</label>
+            <input type="number" id="discount" inputmode="decimal" step="0.01" placeholder="e.g. 10" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn" id="calcBtn" data-calc="Calculate">Calculate</button>
+          <button type="button" class="btn secondary" id="resetBtn" data-reset="Reset">Reset</button>
+        </div>
+
+        <div class="result" role="status" aria-live="polite">
+          <div class="result-label" id="labelResult">FINAL PRICE</div>
+          <div class="result-value" id="result">€ —</div>
+        </div>
+      </form>
+      <div class="logo-below" aria-hidden="true"></div>
+      <p class="footer" id="footerText">For guidance purposes only; this calculation is non-binding and subject to final confirmation.</p>
+    </section>
+  </main>
+
+  <script src="js/calculator.js"></script>
+  <script>
+    (function() {
+      const bruttoEl = document.getElementById('brutto');
+      const vatEl = document.getElementById('vat');
+      const discountEl = document.getElementById('discount');
+      const resultEl = document.getElementById('result');
+      const calcBtn = document.getElementById('calcBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const backLink = document.querySelector('.calculator-back');
+      const langButtons = Array.from(document.querySelectorAll('.lang-flag[data-lang]'));
+      
+      let currentLang = 'en';
+
+      const translations = {
+        en: {
+          title: 'Price Calculator',
+          subtitle: 'Enter brutto price, VAT, and discount to get your final price.',
+          labelBrutto: 'BRUTTO PRICE',
+          labelVat: 'YOUR COUNTRY VAT (%)',
+          labelDiscount: 'YOUR AGREED DISCOUNT (%)',
+          labelResult: 'FINAL PRICE',
+          calcBtn: 'Calculate',
+          resetBtn: 'Reset',
+          footerText: 'For guidance purposes only; this calculation is non-binding and subject to final confirmation.',
+          backText: '← Back to menu'
+        },
+        it: {
+          title: 'Calcolatore di Prezzi',
+          subtitle: 'Inserisci il prezzo lordo, l\'IVA e lo sconto per ottenere il prezzo finale.',
+          labelBrutto: 'PREZZO LORDO',
+          labelVat: 'IVA DEL TUO PAESE (%)',
+          labelDiscount: 'TUO SCONTO CONCORDATO (%)',
+          labelResult: 'PREZZO FINALE',
+          calcBtn: 'Calcola',
+          resetBtn: 'Ripristina',
+          footerText: 'Solo a scopo informativo; questo calcolo non è vincolante ed è soggetto a conferma finale.',
+          backText: '← Torna al menu'
+        }
+      };
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        const t = translations[lang];
+        document.getElementById('calcTitle').textContent = t.title;
+        document.getElementById('calcSubtitle').textContent = t.subtitle;
+        document.getElementById('labelBrutto').textContent = t.labelBrutto;
+        document.getElementById('labelVat').textContent = t.labelVat;
+        document.getElementById('labelDiscount').textContent = t.labelDiscount;
+        document.getElementById('labelResult').textContent = t.labelResult;
+        document.getElementById('calcBtn').textContent = t.calcBtn;
+        document.getElementById('resetBtn').textContent = t.resetBtn;
+        document.getElementById('footerText').textContent = t.footerText;
+        backLink.textContent = t.backText;
+        
+        // Update active language button
+        langButtons.forEach(btn => {
+          const active = btn.dataset.lang === lang;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+
+      function calculate() {
+        const brutto = parseFloat(bruttoEl.value);
+        const vat = parseFloat(vatEl.value) || 0;
+        const discount = parseFloat(discountEl.value) || 0;
+
+        const finalPrice = calculateFinalPrice(brutto, vat, discount);
+        resultEl.textContent = finalPrice !== null ? `€ ${finalPrice}` : '€ —';
+      }
+
+      function reset() {
+        bruttoEl.value = '';
+        vatEl.value = '';
+        discountEl.value = '';
+        resultEl.textContent = '€ —';
+        bruttoEl.focus();
+      }
+
+      // Initialize
+      setLanguage('en');
+
+      // Event listeners
+      calcBtn.addEventListener('click', calculate);
+      resetBtn.addEventListener('click', reset);
+
+      [bruttoEl, vatEl, discountEl].forEach(el => {
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') calculate();
+        });
+      });
+
+      langButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lang = btn.dataset.lang;
+          if (lang !== currentLang) {
+            setLanguage(lang);
+          }
+        });
+      });
+
+      // Update back link to preserve language
+      const backHref = new URL(backLink.href);
+      backLink.addEventListener('click', (e) => {
+        backHref.searchParams.set('lang', currentLang);
+        backLink.href = backHref.toString();
+      });
+    })();
+  </script>
+</body>
+</html>

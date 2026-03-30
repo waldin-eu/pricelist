@@ -422,6 +422,41 @@ function findKeyByHeaderIncludes(keys, terms) {
   });
 }
 
+/**
+ * Find the best discount key (tries dropshipping first, then wholesale)
+ */
+function findDiscountKey(keys) {
+  return keys.find((k) => {
+    const name = normalizeHeaderName(k);
+    return name.includes("dropshipping discount");
+  }) || keys.find((k) => {
+    const name = normalizeHeaderName(k);
+    return name.includes("discount");
+  });
+}
+
+/**
+ * Parse discount percentage from various formats
+ * Formats: "0.2" (decimal), "20%" (percentage), ">20%  <30%" (range)
+ */
+function parseDiscountPercent(value) {
+  if (!value) return 0;
+  const str = String(value || "").trim();
+  
+  // Try to extract percentage number (e.g., "20" from "20%" or ">20%  <30%")
+  const match = str.match(/(\d+(?:\.\d+)?)/);
+  if (match) {
+    const num = parseFloat(match[1]);
+    // If it looks like a decimal (between 0 and 1), convert to percentage
+    if (num > 0 && num <= 1) {
+      return num * 100;
+    }
+    // Otherwise assume it's already a percentage
+    return num;
+  }
+  return 0;
+}
+
 function applyAdminOverrides(data, file) {
   const rows = Array.isArray(data?.rows) ? data.rows : [];
   const keys = Array.isArray(data?.keys) ? data.keys : [];
@@ -695,11 +730,16 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
     return false;
   });
 
+  // Find brutto price and discount columns for calculation
+  const bruttoKey = findBruttoPriceKey(keys) || findBruttoPriceKey(rowKeys);
+  const discountKey = findDiscountKey(keys) || findDiscountKey(rowKeys);
+
   const head = `
     <thead>
       <tr>
         ${hasPhotoColumn ? `<th>${escapeHtml(ui.photoColumn)}</th>` : ""}
         ${displayKeys.map((k) => `<th class="${columnClass(k)}">${escapeHtml(translateColumnHeader(k, lang))}</th>`).join("")}
+        ${bruttoKey && discountKey ? `<th class="${columnClass("Discount Price")}">${lang === "it" ? "Prezzo con Sconto (€)" : "Discount Price (€)"}</th>` : ""}
       </tr>
     </thead>
   `;
@@ -718,6 +758,13 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang) {
             return "";
           })()}</td>` : ""}
           ${displayKeys.map((k) => renderCell(k, r[k], ui, lang)).join("")}
+          ${bruttoKey && discountKey ? `<td>${(() => {
+            const brutto = parseFloat(String(r[bruttoKey] || "").trim());
+            const discount = parseDiscountPercent(r[discountKey]);
+            if (!Number.isFinite(brutto)) return "";
+            const discountPrice = calculateDiscountPrice(brutto, discount);
+            return discountPrice ? `€ ${escapeHtml(discountPrice)}` : "";
+          })()}</td>` : ""}
         </tr>
       `).join("")}
     </tbody>
