@@ -1,4 +1,4 @@
-const ADMIN_PASSWORD_HASH = "3d12527576018e22a61ed07b013616913b6236df96fa03f0f57195429f34afa7"; // Waldin2026!!
+const ADMIN_PASSWORD = "Waldin2026!!";
 const AUTH_KEY = "pricelist.admin.auth.v1";
 const STORE_KEY = "pricelist.admin.v1";
 
@@ -117,13 +117,6 @@ function formatTwoDecimals(value) {
   const num = Number(normalized);
   if (!Number.isFinite(num)) return raw;
   return num.toFixed(2);
-}
-
-function sha256Hex(text) {
-  const enc = new TextEncoder().encode(text);
-  return crypto.subtle.digest("SHA-256", enc).then((buf) =>
-    Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("")
-  );
 }
 
 function readStore() {
@@ -634,12 +627,7 @@ function showApp() {
 }
 
 async function unlock(password) {
-  const hash = await sha256Hex(password);
-  console.log("Password entered:", password);
-  console.log("Hash generated:", hash);
-  console.log("Expected hash:", ADMIN_PASSWORD_HASH);
-  console.log("Match:", hash === ADMIN_PASSWORD_HASH);
-  return hash === ADMIN_PASSWORD_HASH;
+  return password === ADMIN_PASSWORD;
 }
 
 async function startApp() {
@@ -655,16 +643,29 @@ async function startApp() {
 async function init() {
   const loginForm = document.getElementById("loginForm");
   const loginError = document.getElementById("loginError");
+  const passwordInput = document.getElementById("passwordInput");
 
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     loginError.hidden = true;
-    const pass = String(document.getElementById("passwordInput").value || "");
-    const ok = await unlock(pass);
-    if (!ok) {
+    const pass = String(passwordInput.value || "");
+    
+    if (!pass) {
+      loginError.textContent = "Please enter a password.";
       loginError.hidden = false;
+      passwordInput.focus();
       return;
     }
+    
+    const ok = await unlock(pass);
+    if (!ok) {
+      loginError.textContent = "Invalid password. Please try again.";
+      loginError.hidden = false;
+      passwordInput.value = "";
+      passwordInput.focus();
+      return;
+    }
+    
     sessionStorage.setItem(AUTH_KEY, "1");
     await startApp();
   });
