@@ -55,7 +55,7 @@ function setPhotoPreview(dataUrl, label) {
   preview.src = src;
   preview.dataset.label = String(label || "").trim();
   preview.style.display = src ? "block" : "none";
-  downloadBtn.hidden = !src;
+  if (downloadBtn) downloadBtn.hidden = !src;
   if (src.startsWith("blob:")) state.previewObjectUrl = src;
 }
 
