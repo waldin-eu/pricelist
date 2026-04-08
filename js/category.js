@@ -694,15 +694,7 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang, userVat = 0
     rowKeys.find((k) => ["image", "image_url", "photo", "photo_url", "img", "img_url"].includes(k.toLowerCase())) ||
     rowKeys.find((k) => filtered.some((r) => isProbablyImageUrl(r[k])));
 
-  const hasPhotoColumn = filtered.some((r) => {
-    const sku = firstNonEmptyValue(r, skuCandidates);
-    const adminPhoto = sku ? adminPhotoIndex.get(sku) : null;
-    const localPhoto = sku ? photoIndex.get(sku) : null;
-    if (adminPhoto?.url) return true;
-    if (localPhoto?.url) return true;
-    if (imageKey && isProbablyImageUrl(r[imageKey])) return true;
-    return false;
-  });
+  const hasPhotoColumn = true; // Always show photo column since we have SKU photos
 
   // Check if we should show discount price column (when user has entered values)
   const showDiscountPrice = userVat > 0 || userDiscount > 0;
@@ -728,10 +720,15 @@ function renderTable(data, query, photoIndex, adminPhotoIndex, lang, userVat = 0
             const sku = firstNonEmptyValue(r, skuCandidates);
             const adminPhoto = sku ? adminPhotoIndex.get(sku) : null;
             const localPhoto = sku ? photoIndex.get(sku) : null;
-            if (adminPhoto?.url) return renderPhotoCell(adminPhoto, sku);
-            if (localPhoto?.url) return renderPhotoCell(localPhoto, sku);
-            if (imageKey && isProbablyImageUrl(r[imageKey])) return renderPhotoCell({ url: r[imageKey], label: "" }, sku);
-            return "";
+            let photo = null;
+            if (adminPhoto?.url) photo = adminPhoto;
+            else if (localPhoto?.url) photo = localPhoto;
+            else if (imageKey && isProbablyImageUrl(r[imageKey])) photo = { url: r[imageKey], label: "" };
+            else if (sku) {
+              const skuPhotoUrl = getSkuPhotoPath(sku);
+              photo = { url: skuPhotoUrl, label: sku };
+            }
+            return photo ? renderPhotoCell(photo, sku) : "";
           })()}</td>` : ""}
           ${displayKeys.map((k) => renderCell(k, r[k], ui, lang)).join("")}
           ${showDiscountPrice && bruttoKey ? `<td>${(() => {
